@@ -1442,9 +1442,136 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       }
     }
 
+    /* Firebase Auth & Cloud Sync Styles */
+    .auth-header-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-google-login {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.5rem 0.9rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-google-login:hover {
+      background: var(--surface-hover);
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .user-profile-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.25rem 0.65rem 0.25rem 0.35rem;
+      border-radius: 999px;
+    }
+
+    .user-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--accent);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .user-name-text {
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--text);
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background: var(--color-danger-bg);
+      border-color: var(--color-danger);
+      color: var(--color-danger);
+    }
+
+    .notes-sync-banner {
+      font-size: 0.75rem;
+      padding: 0.45rem 0.75rem;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      margin: 0.75rem 1rem 0 1rem;
+    }
+
+    .notes-sync-banner.cloud {
+      background: var(--color-success-bg);
+      border-color: rgba(16, 185, 129, 0.25);
+      color: var(--color-success);
+    }
+
+    .rules-card-box {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px dashed rgba(56, 189, 248, 0.35);
+      border-radius: 6px;
+      padding: 0.65rem 0.8rem;
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .rules-card-code {
+      display: block;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 4px;
+      padding: 0.5rem;
+      color: #93c5fd;
+      font-family: monospace;
+      font-size: 0.725rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0.4rem 0;
+      user-select: all;
+    }
+
     /* Print media styling */
     @media print {
-      .sidebar-nav, .search-box, .btn-print, .calc-box, .assistant-fab, .notes-fab, .assistant-panel, .notes-panel, .btn-notes-toggle, .block-notes-area {
+      .sidebar-nav, .search-box, .btn-print, .auth-header-container, .calc-box, .assistant-fab, .notes-fab, .assistant-panel, .notes-panel, .btn-notes-toggle, .block-notes-area {
         display: none !important;
       }
       .app-layout {
@@ -1482,10 +1609,18 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           <h1 style="font-size: 2.25rem; font-weight: 700; margin: 0 0 0.5rem 0;">Estudos — Vender do Zero na Shopee</h1>
           <p class="muted" style="margin: 0; font-size: 1.05rem;">Material de estudo em construção — anotações de vídeos e pesquisas</p>
         </div>
-        <button onclick="window.print()" class="btn btn-outline btn-print" style="display: flex; align-items: center; gap: 0.5rem;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-          Imprimir / PDF
-        </button>
+        <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+          <!-- Firebase Auth Header Section -->
+          <div id="authHeaderContainer" class="auth-header-container">
+            <button type="button" id="btnGoogleLogin" class="btn-google-login" onclick="handleGoogleLogin()">
+              <span>🔗</span> Entrar com Google
+            </button>
+          </div>
+          <button onclick="window.print()" class="btn btn-outline btn-print" style="display: flex; align-items: center; gap: 0.5rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            Imprimir / PDF
+          </button>
+        </div>
       </div>
     </header>
 
@@ -3389,11 +3524,25 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         <div class="assistant-header-title">
           <span>📝</span> Caderno de Anotações
         </div>
-        <div class="assistant-header-sub">Notas salvas no seu navegador (localStorage)</div>
+        <div id="notesHeaderSub" class="assistant-header-sub">Notas salvas no seu navegador (localStorage)</div>
       </div>
       <button class="assistant-close-btn" onclick="toggleNotesPanel()" aria-label="Fechar anotações">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
+    </div>
+    <div id="notesSyncBanner" class="notes-sync-banner">
+      <span>⚪ Modo local — entre com o Google para sincronizar na nuvem</span>
+      <button type="button" onclick="toggleFirestoreRulesPopup()" style="background: none; border: none; color: var(--color-info); font-size: 0.725rem; cursor: pointer; text-decoration: underline; padding: 0;">Como configurar?</button>
+    </div>
+    <div id="firestoreRulesAccordion" style="display: none; padding: 0.5rem 1rem 0 1rem;">
+      <div class="rules-card-box">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <strong style="color: var(--color-info);">Regras do Firestore:</strong>
+          <button type="button" class="btn-copy-rules" onclick="copyFirestoreRules()">Copiar</button>
+        </div>
+        <code class="rules-card-code" id="rulesSnippetText">ruleset: match /anotacoes/{userId} { allow read, write: if request.auth != null && request.auth.uid == userId; }</code>
+        <span style="color: var(--text-muted); font-size: 0.7rem;">Cole no Firebase Console &gt; Firestore Database &gt; Regras.</span>
+      </div>
     </div>
     <div id="notesListContent" class="notes-list-content">
       <!-- Populated dynamically -->
@@ -3450,6 +3599,14 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       </div>
       <div id="geminiConfigStatusBadge" class="assistant-config-status">
         ⚪ Modo local — usando busca no material de estudo
+      </div>
+      <div style="margin-top: 0.75rem; padding-top: 0.65rem; border-top: 1px solid var(--border);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+          <span style="font-size: 0.8rem; font-weight: 700; color: var(--text);">Segurança Firebase Firestore</span>
+          <button type="button" class="btn-copy-rules" onclick="copyFirestoreRules()">Copiar regras</button>
+        </div>
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0 0 0.35rem 0;">Regras recomendadas para proteger suas anotações por usuário:</p>
+        <code class="rules-card-code" style="margin: 0;">match /anotacoes/{userId} { allow read, write: if request.auth != null && request.auth.uid == userId; }</code>
       </div>
     </div>
 
@@ -3654,7 +3811,191 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       }
     }
 
-    /* ================= ANOTAÇÕES (LOCALSTORAGE) ================= */
+    /* ================= FIREBASE INTEGRATION & AUTH ================= */
+    // Configuração oficial do Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyC4FsVGqIjWE2-tA7uCQvakPs1KOUlwsRs",
+      authDomain: "estudos-shopee.firebaseapp.com",
+      projectId: "estudos-shopee",
+      storageBucket: "estudos-shopee.firebasestorage.app",
+      messagingSenderId: "172206086382",
+      appId: "1:172206086382:web:9057096010cdf0f4cffbff"
+    };
+
+    /**
+     * REGRAS RECOMENDADAS DO FIRESTORE (Cole no console Firebase > Firestore > Regras):
+     * rules_version = '2';
+     * service cloud.firestore {
+     *   match /databases/{database}/documents {
+     *     match /anotacoes/{userId} {
+     *       allow read, write: if request.auth != null && request.auth.uid == userId;
+     *     }
+     *   }
+     * }
+     */
+
+    let firebaseAuth = null;
+    let firestoreDb = null;
+    let currentUser = null;
+    let isFirebaseReady = false;
+
+    // Carregamento tolerante dos SDKs compat via injeção dinâmica assíncrona
+    function initFirebaseGracefully() {
+      const sdkUrls = [
+        'https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js',
+        'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js',
+        'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js'
+      ];
+
+      function loadScriptSequentially(index) {
+        if (index >= sdkUrls.length) {
+          try {
+            if (window.firebase && !window.firebase.apps.length) {
+              window.firebase.initializeApp(firebaseConfig);
+            }
+            if (window.firebase) {
+              firebaseAuth = window.firebase.auth();
+              firestoreDb = window.firebase.firestore();
+              isFirebaseReady = true;
+
+              firebaseAuth.onAuthStateChanged(handleFirebaseAuthState);
+            }
+          } catch (e) {
+            // Em caso de bloqueio ou erro, mantém modo local transparente
+            renderAuthHeader(null);
+            updateNotesSyncUI(null);
+          }
+          return;
+        }
+
+        const script = document.createElement('script');
+        script.src = sdkUrls[index];
+        script.async = true;
+        script.onload = () => loadScriptSequentially(index + 1);
+        script.onerror = () => {
+          // Falha tolerante (offline ou adblocker): continua no modo local silenciosamente
+          renderAuthHeader(null);
+          updateNotesSyncUI(null);
+        };
+        document.head.appendChild(script);
+      }
+
+      loadScriptSequentially(0);
+    }
+
+    function handleFirebaseAuthState(user) {
+      currentUser = user;
+      renderAuthHeader(user);
+      updateNotesSyncUI(user);
+
+      if (user) {
+        loadNotesFromFirestoreAndSync(user.uid);
+      } else {
+        // Logout: volta a exibir dados locais sem apagar nada
+        loadSavedNotes();
+        renderNotesList();
+      }
+    }
+
+    function renderAuthHeader(user) {
+      const container = document.getElementById('authHeaderContainer');
+      if (!container) return;
+
+      if (user) {
+        const photo = user.photoURL;
+        const displayName = user.displayName || user.email || 'Usuário';
+        const initial = displayName.charAt(0).toUpperCase();
+
+        const avatarHtml = photo 
+          ? `<img src="${escapeHtml(photo)}" class="user-avatar" alt="Foto de ${escapeHtml(displayName)}" onerror="this.outerHTML='<div class=\\'user-avatar\\'>${initial}</div>'"/>`
+          : `<div class="user-avatar">${initial}</div>`;
+
+        container.innerHTML = `
+          <div class="user-profile-badge" title="${escapeHtml(user.email || displayName)}">
+            ${avatarHtml}
+            <span class="user-name-text">${escapeHtml(displayName)}</span>
+          </div>
+          <button type="button" class="btn-logout" onclick="handleLogout()">Sair</button>
+        `;
+      } else {
+        container.innerHTML = `
+          <button type="button" id="btnGoogleLogin" class="btn-google-login" onclick="handleGoogleLogin()">
+            <span>🔗</span> Entrar com Google
+          </button>
+        `;
+      }
+    }
+
+    function updateNotesSyncUI(user) {
+      const banner = document.getElementById('notesSyncBanner');
+      const headerSub = document.getElementById('notesHeaderSub');
+      if (!banner) return;
+
+      if (user) {
+        const nameOrEmail = user.displayName || user.email || 'Google';
+        banner.className = 'notes-sync-banner cloud';
+        banner.innerHTML = `
+          <span>☁️ Conectado: <strong>${escapeHtml(nameOrEmail)}</strong> (Sincronizado na nuvem)</span>
+          <button type="button" onclick="toggleFirestoreRulesPopup()" style="background: none; border: none; color: inherit; font-size: 0.725rem; cursor: pointer; text-decoration: underline; padding: 0;">Regras</button>
+        `;
+        if (headerSub) headerSub.textContent = 'Anotações sincronizadas no Firebase Firestore';
+      } else {
+        banner.className = 'notes-sync-banner';
+        banner.innerHTML = `
+          <span>⚪ Modo local — entre com o Google para sincronizar na nuvem</span>
+          <button type="button" onclick="toggleFirestoreRulesPopup()" style="background: none; border: none; color: var(--color-info); font-size: 0.725rem; cursor: pointer; text-decoration: underline; padding: 0;">Como configurar?</button>
+        `;
+        if (headerSub) headerSub.textContent = 'Notas salvas no seu navegador (localStorage)';
+      }
+    }
+
+    function toggleFirestoreRulesPopup() {
+      const el = document.getElementById('firestoreRulesAccordion');
+      if (el) {
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+      }
+    }
+
+    function copyFirestoreRules() {
+      const code = `ruleset: match /anotacoes/{userId} { allow read, write: if request.auth != null && request.auth.uid == userId; }`;
+      navigator.clipboard.writeText(code).then(() => {
+        alert('Regras copiadas para a área de transferência!\n\nCole no Firebase Console > Firestore Database > Regras.');
+      }).catch(() => {
+        prompt('Copie as regras abaixo:', code);
+      });
+    }
+
+    async function handleGoogleLogin() {
+      if (!isFirebaseReady || !firebaseAuth) {
+        alert('Conectando ao Firebase... Caso esteja sem internet ou com bloqueador ativo, suas anotações continuam salvas no modo local!');
+        return;
+      }
+
+      const provider = new window.firebase.auth.GoogleAuthProvider();
+      try {
+        await firebaseAuth.signInWithPopup(provider);
+      } catch (err) {
+        if (err.code === 'auth/popup-blocked' || err.code === 'auth/cancelled-popup-request') {
+          try {
+            await firebaseAuth.signInWithRedirect(provider);
+          } catch (redErr) {
+            alert('Não foi possível abrir o login com Google: ' + (redErr.message || redErr.code));
+          }
+        } else if (err.code !== 'auth/popup-closed-by-user') {
+          alert('Erro ao entrar com Google: ' + (err.message || err.code));
+        }
+      }
+    }
+
+    async function handleLogout() {
+      if (firebaseAuth) {
+        try {
+          await firebaseAuth.signOut();
+        } catch (e) {}
+      }
+    }
+
+    /* ================= ANOTAÇÕES E SINCRONIZAÇÃO FIRESTORE ================= */
     const blockTitlesMap = {
       'bloco-1': 'Bloco 1: Zero Visitas & Indexação',
       'bloco-2': 'Bloco 2: Shopee Ads & ROAS',
@@ -3702,10 +4043,11 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       }, 500);
     }
 
-    function saveNote(blockId, text) {
+    async function saveNote(blockId, text) {
       const storageKey = `shopee-estudo-notas-${blockId}`;
       const trimmed = (text || '').trim();
 
+      // Backup local sempre mantido
       if (trimmed) {
         localStorage.setItem(storageKey, text);
       } else {
@@ -3713,17 +4055,119 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       }
 
       updateNotesIndicator(blockId, !!trimmed);
-
-      const statusEl = document.getElementById(`status-notes-${blockId}`);
-      if (statusEl) {
-        statusEl.classList.add('visible');
-        setTimeout(() => {
-          statusEl.classList.remove('visible');
-        }, 2000);
-      }
-
       updateNotesFabBadge();
       renderNotesList();
+
+      const statusEl = document.getElementById(`status-notes-${blockId}`);
+
+      // Com login ativo: salva no Firestore na coleção "anotacoes", documento UID
+      if (currentUser && isFirebaseReady && firestoreDb) {
+        try {
+          const docRef = firestoreDb.collection('anotacoes').doc(currentUser.uid);
+          await docRef.set({
+            blocos: {
+              [blockId]: text || ''
+            },
+            atualizadoEm: window.firebase.firestore.FieldValue.serverTimestamp()
+          }, { merge: true });
+
+          if (statusEl) {
+            statusEl.textContent = '✓ Salvo na nuvem';
+            statusEl.style.color = 'var(--color-success)';
+            statusEl.classList.add('visible');
+            setTimeout(() => {
+              statusEl.classList.remove('visible');
+            }, 2000);
+          }
+        } catch (err) {
+          // Erro de permissão/rede: mantém salvo localmente e avisa
+          if (statusEl) {
+            statusEl.textContent = '⚠️ Erro ao salvar na nuvem — salvo localmente';
+            statusEl.style.color = 'var(--color-warning)';
+            statusEl.classList.add('visible');
+            setTimeout(() => {
+              statusEl.classList.remove('visible');
+            }, 3000);
+          }
+        }
+      } else {
+        // Sem login: feedback salvo local
+        if (statusEl) {
+          statusEl.textContent = '✓ Salvo';
+          statusEl.style.color = 'var(--color-success)';
+          statusEl.classList.add('visible');
+          setTimeout(() => {
+            statusEl.classList.remove('visible');
+          }, 2000);
+        }
+      }
+    }
+
+    // Carregamento da nuvem para as textareas + migração automática no 1º login
+    async function loadNotesFromFirestoreAndSync(uid) {
+      if (!isFirebaseReady || !firestoreDb) return;
+
+      try {
+        const docRef = firestoreDb.collection('anotacoes').doc(uid);
+        const docSnap = await docRef.get();
+
+        let cloudBlocos = null;
+        if (docSnap.exists) {
+          const data = docSnap.data();
+          if (data && data.blocos && typeof data.blocos === 'object') {
+            cloudBlocos = data.blocos;
+          }
+        }
+
+        // Verifica se nuvem já tem anotações preenchidas
+        const hasCloudNotes = cloudBlocos && Object.values(cloudBlocos).some(val => val && val.trim());
+
+        if (hasCloudNotes) {
+          // Nuvem é a fonte da verdade quando logado: carrega para textareas e atualiza localStorage
+          Object.keys(blockTitlesMap).forEach(blockId => {
+            const val = cloudBlocos[blockId] || '';
+            const input = document.getElementById(`note-input-${blockId}`);
+            if (input) input.value = val;
+
+            const storageKey = `shopee-estudo-notas-${blockId}`;
+            if (val.trim()) {
+              localStorage.setItem(storageKey, val);
+              updateNotesIndicator(blockId, true);
+            } else {
+              localStorage.removeItem(storageKey);
+              updateNotesIndicator(blockId, false);
+            }
+          });
+        } else {
+          // MIGRAÇÃO AUTOMÁTICA: primeiro login ou documento vazio na nuvem
+          // Se existirem anotações no localStorage, envia automaticamente para a nuvem
+          const localMigrationMap = {};
+          let foundLocalNotes = false;
+
+          Object.keys(blockTitlesMap).forEach(blockId => {
+            const storageKey = `shopee-estudo-notas-${blockId}`;
+            const localVal = localStorage.getItem(storageKey);
+            if (localVal && localVal.trim()) {
+              localMigrationMap[blockId] = localVal;
+              foundLocalNotes = true;
+            }
+          });
+
+          if (foundLocalNotes) {
+            await docRef.set({
+              blocos: localMigrationMap,
+              criadoEm: window.firebase.firestore.FieldValue.serverTimestamp(),
+              migradoDoLocalStorage: true
+            }, { merge: true });
+          }
+        }
+
+        updateNotesFabBadge();
+        renderNotesList();
+      } catch (err) {
+        // Fallback em caso de erro de rede ou permissão
+        loadSavedNotes();
+      }
     }
 
     function updateNotesIndicator(blockId, hasText) {
@@ -4787,6 +5231,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     window.addEventListener('DOMContentLoaded', () => {
       loadSavedNotes();
       updateAssistantStatusDisplay();
+      initFirebaseGracefully();
     });
   </script>
 <script>
