@@ -290,21 +290,165 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       pointer-events: none;
     }
 
+    /* Course Overall Progress Bar */
+    .course-progress-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.15rem 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    }
+
+    .course-progress-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .course-progress-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .course-progress-count {
+      color: var(--accent-text);
+      font-weight: 700;
+    }
+
+    .course-progress-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-reset-progress {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .btn-reset-progress:hover {
+      border-color: var(--color-danger);
+      color: var(--color-danger);
+      background: var(--color-danger-bg);
+    }
+
+    .course-bar-track {
+      width: 100%;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+
+    .course-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ef4444 0%, #f59e0b 45%, #10b981 100%);
+      border-radius: 999px;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Sidebar Search & Counter */
+    .sidebar-search-box {
+      position: relative;
+      margin-bottom: 0.85rem;
+    }
+
+    .sidebar-search-input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem 1.8rem 0.5rem 0.65rem;
+      color: var(--text);
+      font-size: 0.8rem;
+      font-family: inherit;
+      box-sizing: border-box;
+      transition: border-color 0.2s;
+    }
+
+    .sidebar-search-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .sidebar-search-clear {
+      position: absolute;
+      right: 0.4rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 0.2rem;
+      line-height: 1;
+      display: none;
+    }
+
+    .sidebar-search-clear:hover {
+      color: var(--text);
+    }
+
+    .sidebar-search-count {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+      padding-left: 0.2rem;
+      display: none;
+    }
+
+    .sidebar-search-count.visible {
+      display: block;
+    }
+
     /* Collapsible Cards / Accordion Blocks */
     .study-block {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       overflow: hidden;
-      transition: border-color 0.2s ease;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
     }
 
     .study-block:hover {
       border-color: rgba(255, 255, 255, 0.15);
     }
 
+    .study-block.completed {
+      border-color: rgba(16, 185, 129, 0.45);
+    }
+
+    .study-block.completed .block-header {
+      background: rgba(16, 185, 129, 0.05);
+    }
+
+    .study-block.completed .block-title::after {
+      content: " ✓";
+      color: var(--color-success);
+      font-weight: 700;
+      margin-left: 0.35rem;
+    }
+
     .block-header {
-      padding: 1.25rem 1.5rem;
+      padding: 1.15rem 1.4rem;
       background: var(--surface);
       display: flex;
       align-items: center;
@@ -313,6 +457,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       user-select: none;
       border-bottom: 1px solid transparent;
       transition: background-color 0.2s ease, border-color 0.2s ease;
+      gap: 0.75rem;
     }
 
     .study-block.open .block-header {
@@ -734,13 +879,51 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       flex-shrink: 0;
     }
 
-    /* Block Notes In-card Styles */
+    /* Block Header Actions (Notes + Completion) */
     .block-header-actions {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.6rem;
       margin-left: auto;
-      margin-right: 0.75rem;
+      margin-right: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .block-complete-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .block-complete-btn:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+      border-color: var(--color-success);
+    }
+
+    .block-complete-btn.checked {
+      background: var(--color-success-bg);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: var(--color-success);
+    }
+
+    .block-complete-chk {
+      accent-color: #10b981;
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+      margin: 0;
     }
 
     .btn-notes-toggle {
@@ -1866,7 +2049,15 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       <!-- Navigation Sidebar -->
       <aside class="sidebar-nav shell-fade">
         <div class="sidebar-title">Índice do Caderno</div>
-        <ul class="nav-list">
+
+        <!-- Real-time Sidebar Search -->
+        <div class="sidebar-search-box">
+          <input type="text" id="sidebarSearchInput" class="sidebar-search-input" placeholder="🔍 Buscar no caderno..." aria-label="Buscar blocos do caderno" />
+          <button type="button" id="sidebarSearchClear" class="sidebar-search-clear" onclick="clearCadernoSearch()" aria-label="Limpar busca">✕</button>
+        </div>
+        <div id="sidebarSearchCount" class="sidebar-search-count"></div>
+
+        <ul class="nav-list" id="sidebarNavList">
           <li class="nav-item">
             <a href="#bloco-1" class="active">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -2009,7 +2200,23 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       <!-- Main Content Area -->
       <main class="main-content">
 
-
+        <!-- Course Overall Progress Bar Card -->
+        <div class="course-progress-card shell-fade" id="courseProgressCard">
+          <div class="course-progress-header">
+            <div class="course-progress-title">
+              <span>📊 Progresso do curso:</span>
+              <span class="course-progress-count" id="courseProgressCount">0 de 20 concluídos (0%)</span>
+            </div>
+            <div class="course-progress-actions">
+              <button type="button" class="btn-reset-progress" onclick="resetCourseProgress()" title="Zerar todas as marcações de conclusão">
+                ↺ Zerar progresso
+              </button>
+            </div>
+          </div>
+          <div class="course-bar-track">
+            <div class="course-bar-fill" id="courseProgressBarFill" style="width: 0%;"></div>
+          </div>
+        </div>
 
         <!-- Real-time Filter Search Box -->
         <div class="search-box shell-fade">
@@ -2018,8 +2225,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </div>
 
         <!-- ================= BLOCO 1 ================= -->
-        <section id="bloco-1" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="bloco-1" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('bloco-1')">
             <div class="block-header-left">
               <div class="block-tag">
                 Bloco 1
@@ -2028,6 +2235,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Anúncios sem visitas: por que seu anúncio não aparece</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-bloco-1" title="Marcar bloco como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-bloco-1" data-block-id="bloco-1" onchange="toggleBlockCompletion('bloco-1', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-bloco-1" onclick="toggleNotes(event, 'bloco-1')">
                 📝 Anotações <span class="notes-dot" id="dot-bloco-1">●</span>
               </button>
@@ -2156,8 +2367,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= BLOCO 2 ================= -->
-        <section id="bloco-2" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="bloco-2" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('bloco-2')">
             <div class="block-header-left">
               <div class="block-tag">
                 Bloco 2
@@ -2166,6 +2377,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Estratégia que está funcionando no Shopee Ads</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-bloco-2" title="Marcar bloco como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-bloco-2" data-block-id="bloco-2" onchange="toggleBlockCompletion('bloco-2', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-bloco-2" onclick="toggleNotes(event, 'bloco-2')">
                 📝 Anotações <span class="notes-dot" id="dot-bloco-2">●</span>
               </button>
@@ -2307,8 +2522,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= CALCULADORA ROAS INTERATIVA ================= -->
-        <section id="calculadora-roas" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="calculadora-roas" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('calculadora-roas')">
             <div class="block-header-left">
               <div class="block-tag">
                 Ferramenta Prática
@@ -2390,8 +2605,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= BLOCO 3 ================= -->
-        <section id="bloco-3" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="bloco-3" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('bloco-3')">
             <div class="block-header-left">
               <div class="block-tag">
                 Bloco 3
@@ -2400,6 +2615,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Anúncio que vende: a hierarquia do anúncio</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-bloco-3" title="Marcar bloco como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-bloco-3" data-block-id="bloco-3" onchange="toggleBlockCompletion('bloco-3', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-bloco-3" onclick="toggleNotes(event, 'bloco-3')">
                 📝 Anotações <span class="notes-dot" id="dot-bloco-3">●</span>
               </button>
@@ -2481,8 +2700,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= BLOCO 4 ================= -->
-        <section id="bloco-4" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="bloco-4" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('bloco-4')">
             <div class="block-header-left">
               <div class="block-tag">
                 Bloco 4
@@ -2491,6 +2710,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Loja nova: já faço Ads? + Guia GMV Max 2026</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-bloco-4" title="Marcar bloco como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-bloco-4" data-block-id="bloco-4" onchange="toggleBlockCompletion('bloco-4', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-bloco-4" onclick="toggleNotes(event, 'bloco-4')">
                 📝 Anotações <span class="notes-dot" id="dot-bloco-4">●</span>
               </button>
@@ -2547,8 +2770,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= BLOCO 5 ================= -->
-        <section id="bloco-5" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="bloco-5" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('bloco-5')">
             <div class="block-header-left">
               <div class="block-tag">
                 Bloco 5
@@ -2557,6 +2780,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Shopee Live: o novo balcão da loja</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-bloco-5" title="Marcar bloco como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-bloco-5" data-block-id="bloco-5" onchange="toggleBlockCompletion('bloco-5', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-bloco-5" onclick="toggleNotes(event, 'bloco-5')">
                 📝 Anotações <span class="notes-dot" id="dot-bloco-5">●</span>
               </button>
@@ -2627,8 +2854,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= BLOCO 6 ================= -->
-        <section id="bloco-6" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="bloco-6" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('bloco-6')">
             <div class="block-header-left">
               <div class="block-tag">
                 Bloco 6
@@ -2637,6 +2864,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Shopee Vídeo: tráfego orgânico acelerado</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-bloco-6" title="Marcar bloco como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-bloco-6" data-block-id="bloco-6" onchange="toggleBlockCompletion('bloco-6', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-bloco-6" onclick="toggleNotes(event, 'bloco-6')">
                 📝 Anotações <span class="notes-dot" id="dot-bloco-6">●</span>
               </button>
@@ -2691,8 +2922,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= BLOCO 7 ================= -->
-        <section id="bloco-7" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="bloco-7" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('bloco-7')">
             <div class="block-header-left">
               <div class="block-tag">
                 Bloco 7
@@ -2701,6 +2932,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Cupom Inteligente: desconto subsidiado pela Shopee</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-bloco-7" title="Marcar bloco como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-bloco-7" data-block-id="bloco-7" onchange="toggleBlockCompletion('bloco-7', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-bloco-7" onclick="toggleNotes(event, 'bloco-7')">
                 📝 Anotações <span class="notes-dot" id="dot-bloco-7">●</span>
               </button>
@@ -2765,8 +3000,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= BLOCO 8 ================= -->
-        <section id="bloco-8" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="bloco-8" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('bloco-8')">
             <div class="block-header-left">
               <div class="block-tag">
                 Bloco 8
@@ -2775,6 +3010,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Ferramenta de Afiliados: alavanca de vendas externa</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-bloco-8" title="Marcar bloco como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-bloco-8" data-block-id="bloco-8" onchange="toggleBlockCompletion('bloco-8', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-bloco-8" onclick="toggleNotes(event, 'bloco-8')">
                 📝 Anotações <span class="notes-dot" id="dot-bloco-8">●</span>
               </button>
@@ -2844,8 +3083,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= BLOCO 9 ================= -->
-        <section id="bloco-9" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="bloco-9" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('bloco-9')">
             <div class="block-header-left">
               <div class="block-tag">
                 Bloco 9
@@ -2854,6 +3093,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Ticket médio e kits: multiplicadores de lucro</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-bloco-9" title="Marcar bloco como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-bloco-9" data-block-id="bloco-9" onchange="toggleBlockCompletion('bloco-9', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-bloco-9" onclick="toggleNotes(event, 'bloco-9')">
                 📝 Anotações <span class="notes-dot" id="dot-bloco-9">●</span>
               </button>
@@ -2926,8 +3169,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= BLOCO 10 ================= -->
-        <section id="bloco-10" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="bloco-10" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('bloco-10')">
             <div class="block-header-left">
               <div class="block-tag">
                 Bloco 10
@@ -2936,6 +3179,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Reputação, eventos e algoritmo 2026</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-bloco-10" title="Marcar bloco como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-bloco-10" data-block-id="bloco-10" onchange="toggleBlockCompletion('bloco-10', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-bloco-10" onclick="toggleNotes(event, 'bloco-10')">
                 📝 Anotações <span class="notes-dot" id="dot-bloco-10">●</span>
               </button>
@@ -3004,8 +3251,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= BLOCO 11 ================= -->
-        <section id="bloco-11" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="bloco-11" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('bloco-11')">
             <div class="block-header-left">
               <div class="block-tag">
                 Bloco 11
@@ -3014,6 +3261,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Vendedor Indicado: como entrar e se manter</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-bloco-11" title="Marcar bloco como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-bloco-11" data-block-id="bloco-11" onchange="toggleBlockCompletion('bloco-11', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-bloco-11" onclick="toggleNotes(event, 'bloco-11')">
                 📝 Anotações <span class="notes-dot" id="dot-bloco-11">●</span>
               </button>
@@ -3130,8 +3381,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= BLOCO 12 ================= -->
-        <section id="bloco-12" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="bloco-12" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('bloco-12')">
             <div class="block-header-left">
               <div class="block-tag">
                 Bloco 12
@@ -3140,6 +3391,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Regras do anúncio e proteção de conteúdo</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-bloco-12" title="Marcar bloco como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-bloco-12" data-block-id="bloco-12" onchange="toggleBlockCompletion('bloco-12', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-bloco-12" onclick="toggleNotes(event, 'bloco-12')">
                 📝 Anotações <span class="notes-dot" id="dot-bloco-12">●</span>
               </button>
@@ -3235,8 +3490,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= BLOCO 13 ================= -->
-        <section id="bloco-13" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="bloco-13" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('bloco-13')">
             <div class="block-header-left">
               <div class="block-tag">
                 Bloco 13
@@ -3245,6 +3500,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Exposição, cadastro e logística</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-bloco-13" title="Marcar bloco como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-bloco-13" data-block-id="bloco-13" onchange="toggleBlockCompletion('bloco-13', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-bloco-13" onclick="toggleNotes(event, 'bloco-13')">
                 📝 Anotações <span class="notes-dot" id="dot-bloco-13">●</span>
               </button>
@@ -3353,8 +3612,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= BLOCO 14 ================= -->
-        <section id="bloco-14" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="bloco-14" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('bloco-14')">
             <div class="block-header-left">
               <div class="block-tag">
                 Bloco 14
@@ -3363,6 +3622,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Penalidades, avaliações e gestão da operação</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-bloco-14" title="Marcar bloco como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-bloco-14" data-block-id="bloco-14" onchange="toggleBlockCompletion('bloco-14', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-bloco-14" onclick="toggleNotes(event, 'bloco-14')">
                 📝 Anotações <span class="notes-dot" id="dot-bloco-14">●</span>
               </button>
@@ -3548,8 +3811,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= BLOCO 15 ================= -->
-        <section id="bloco-15" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="bloco-15" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('bloco-15')">
             <div class="block-header-left">
               <div class="block-tag">
                 Bloco 15
@@ -3558,6 +3821,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Nova atualização do Shopee Ads: o que mudou</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-bloco-15" title="Marcar bloco como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-bloco-15" data-block-id="bloco-15" onchange="toggleBlockCompletion('bloco-15', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-bloco-15" onclick="toggleNotes(event, 'bloco-15')">
                 📝 Anotações <span class="notes-dot" id="dot-bloco-15">●</span>
               </button>
@@ -3618,8 +3885,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= BLOCO 16 ================= -->
-        <section id="bloco-16" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="bloco-16" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('bloco-16')">
             <div class="block-header-left">
               <div class="block-tag">
                 Bloco 16
@@ -3628,6 +3895,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Por que meus anúncios não vendem? Diagnóstico das engrenagens</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-bloco-16" title="Marcar bloco como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-bloco-16" data-block-id="bloco-16" onchange="toggleBlockCompletion('bloco-16', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-bloco-16" onclick="toggleNotes(event, 'bloco-16')">
                 📝 Anotações <span class="notes-dot" id="dot-bloco-16">●</span>
               </button>
@@ -3694,8 +3965,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= BLOCO 17 ================= -->
-        <section id="bloco-17" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="bloco-17" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('bloco-17')">
             <div class="block-header-left">
               <div class="block-tag">
                 Bloco 17
@@ -3704,6 +3975,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Investimento, CPC e orçamento no Ads</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-bloco-17" title="Marcar bloco como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-bloco-17" data-block-id="bloco-17" onchange="toggleBlockCompletion('bloco-17', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-bloco-17" onclick="toggleNotes(event, 'bloco-17')">
                 📝 Anotações <span class="notes-dot" id="dot-bloco-17">●</span>
               </button>
@@ -3766,8 +4041,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= BLOCO 18 ================= -->
-        <section id="bloco-18" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="bloco-18" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('bloco-18')">
             <div class="block-header-left">
               <div class="block-tag">
                 Bloco 18
@@ -3776,6 +4051,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Orgânico, variações e afiliados: a nova realidade</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-bloco-18" title="Marcar bloco como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-bloco-18" data-block-id="bloco-18" onchange="toggleBlockCompletion('bloco-18', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-bloco-18" onclick="toggleNotes(event, 'bloco-18')">
                 📝 Anotações <span class="notes-dot" id="dot-bloco-18">●</span>
               </button>
@@ -3830,8 +4109,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= BLOCO 19 ================= -->
-        <section id="bloco-19" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="bloco-19" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('bloco-19')">
             <div class="block-header-left">
               <div class="block-tag">
                 Bloco 19
@@ -3840,6 +4119,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Escala, diagnóstico e ferramentas de ouro</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-bloco-19" title="Marcar bloco como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-bloco-19" data-block-id="bloco-19" onchange="toggleBlockCompletion('bloco-19', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-bloco-19" onclick="toggleNotes(event, 'bloco-19')">
                 📝 Anotações <span class="notes-dot" id="dot-bloco-19">●</span>
               </button>
@@ -3925,8 +4208,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </section>
 
         <!-- ================= CHECKLIST RÁPIDO ================= -->
-        <section id="checklist" class="study-block open shell-fade">
-          <div class="block-header" onclick="toggleBlock(this)">
+        <section id="checklist" class="study-block shell-fade">
+          <div class="block-header" onclick="handleBlockHeaderClick('checklist')">
             <div class="block-header-left">
               <div class="block-tag">
                 Plano de Ação Integrado
@@ -3935,6 +4218,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <h2 class="block-title">Checklist Rápido de Execução na Shopee</h2>
             </div>
             <div class="block-header-actions" onclick="event.stopPropagation()">
+              <label class="block-complete-btn" id="lbl-complete-checklist" title="Marcar checklist como concluído">
+                <input type="checkbox" class="block-complete-chk" id="chk-complete-checklist" data-block-id="checklist" onchange="toggleBlockCompletion('checklist', this.checked)">
+                <span>✅ Concluído</span>
+              </label>
               <button type="button" class="btn-notes-toggle" id="btn-notes-checklist" onclick="toggleNotes(event, 'checklist')">
                 📝 Anotações <span class="notes-dot" id="dot-checklist">●</span>
               </button>
@@ -4402,22 +4689,14 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       // Checklist persistence
       loadChecklistState();
 
-      // Real-time Search Filter Across Notes
-      const searchInput = document.getElementById('searchInput');
-      searchInput.addEventListener('input', (e) => {
-        const query = e.target.value.toLowerCase().trim();
-        const reasonCards = document.querySelectorAll('.reason-card, .strategy-card, .action-item');
+      // Course progress persistence
+      loadCourseProgress();
 
-        reasonCards.forEach(card => {
-          const text = card.textContent.toLowerCase();
-          if (query === '' || text.includes(query)) {
-            card.style.display = '';
-            card.style.border = '';
-          } else {
-            card.style.display = query.length > 2 ? 'none' : '';
-          }
-        });
-      });
+      // Initialize search inputs and sync
+      setupSearchInputs();
+
+      // Setup sidebar nav link clicks to open accordion
+      setupSidebarNavClicks();
 
       // Highlight active nav link on scroll
       const sections = document.querySelectorAll('section[id]');
@@ -4439,10 +4718,252 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       });
     });
 
-    // Accordion Toggle
-    function toggleBlock(headerEl) {
-      const block = headerEl.parentElement;
-      block.classList.toggle('open');
+    /* ================= ACCORDION MANAGEMENT (ONLY 1 OPEN AT A TIME) ================= */
+    function handleBlockHeaderClick(blockId) {
+      const targetBlock = document.getElementById(blockId);
+      if (!targetBlock) return;
+      const isOpen = targetBlock.classList.contains('open');
+
+      // Close all blocks
+      document.querySelectorAll('.study-block').forEach(b => {
+        b.classList.remove('open');
+      });
+
+      // If it wasn't open, open it now
+      if (!isOpen) {
+        targetBlock.classList.add('open');
+      }
+    }
+
+    function openSingleBlock(blockId, smoothScroll = true) {
+      const targetBlock = document.getElementById(blockId);
+      if (!targetBlock) return;
+
+      // Close other blocks
+      document.querySelectorAll('.study-block').forEach(b => {
+        if (b !== targetBlock) {
+          b.classList.remove('open');
+        }
+      });
+
+      targetBlock.classList.add('open');
+
+      if (smoothScroll) {
+        targetBlock.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function setupSidebarNavClicks() {
+      const links = document.querySelectorAll('.nav-list a');
+      links.forEach(link => {
+        link.addEventListener('click', (e) => {
+          const href = link.getAttribute('href');
+          if (href && href.startsWith('#')) {
+            const blockId = href.substring(1);
+            const targetEl = document.getElementById(blockId);
+            if (targetEl) {
+              e.preventDefault();
+              openSingleBlock(blockId, true);
+              // update active class
+              links.forEach(l => l.classList.remove('active'));
+              link.classList.add('active');
+            }
+          }
+        });
+      });
+    }
+
+    /* ================= BARRA DE PROGRESSO DO CURSO (20 ITENS) ================= */
+    const COURSE_BLOCKS = [
+      'bloco-1', 'bloco-2', 'bloco-3', 'bloco-4', 'bloco-5',
+      'bloco-6', 'bloco-7', 'bloco-8', 'bloco-9', 'bloco-10',
+      'bloco-11', 'bloco-12', 'bloco-13', 'bloco-14', 'bloco-15',
+      'bloco-16', 'bloco-17', 'bloco-18', 'bloco-19', 'checklist'
+    ];
+    const COURSE_STORAGE_KEY = 'shopee-estudo-progresso';
+
+    let courseProgressState = {};
+
+    function loadCourseProgress() {
+      try {
+        const saved = localStorage.getItem(COURSE_STORAGE_KEY);
+        if (saved) {
+          courseProgressState = JSON.parse(saved);
+        } else {
+          courseProgressState = {};
+        }
+      } catch (e) {
+        courseProgressState = {};
+      }
+      applyCourseProgressUI();
+    }
+
+    function applyCourseProgressUI() {
+      let completedCount = 0;
+
+      COURSE_BLOCKS.forEach(blockId => {
+        const isDone = !!courseProgressState[blockId];
+        if (isDone) completedCount++;
+
+        const chk = document.getElementById(`chk-complete-${blockId}`);
+        const lbl = document.getElementById(`lbl-complete-${blockId}`);
+        const sec = document.getElementById(blockId);
+
+        if (chk) chk.checked = isDone;
+        if (lbl) lbl.classList.toggle('checked', isDone);
+        if (sec) sec.classList.toggle('completed', isDone);
+      });
+
+      const total = COURSE_BLOCKS.length; // 20
+      const pct = Math.round((completedCount / total) * 100);
+
+      const countEl = document.getElementById('courseProgressCount');
+      const barEl = document.getElementById('courseProgressBarFill');
+
+      if (countEl) {
+        countEl.textContent = `${completedCount} de ${total} concluídos (${pct}%)`;
+      }
+      if (barEl) {
+        barEl.style.width = `${pct}%`;
+      }
+    }
+
+    async function toggleBlockCompletion(blockId, isChecked) {
+      courseProgressState[blockId] = !!isChecked;
+
+      try {
+        localStorage.setItem(COURSE_STORAGE_KEY, JSON.stringify(courseProgressState));
+      } catch (e) {}
+
+      applyCourseProgressUI();
+
+      // Sync with Firestore if user is authenticated
+      if (currentUser && isFirebaseReady && firestoreDb) {
+        try {
+          const docRef = firestoreDb.collection('anotacoes').doc(currentUser.uid);
+          await docRef.set({
+            progresso: courseProgressState,
+            atualizadoEm: window.firebase.firestore.FieldValue.serverTimestamp()
+          }, { merge: true });
+        } catch (err) {
+          console.warn('Erro ao sincronizar progresso no Firestore:', err);
+        }
+      }
+    }
+
+    async function resetCourseProgress() {
+      if (!confirm('Deseja realmente zerar o progresso do curso e desmarcar todos os 20 blocos concluídos?')) {
+        return;
+      }
+
+      courseProgressState = {};
+      try {
+        localStorage.setItem(COURSE_STORAGE_KEY, JSON.stringify(courseProgressState));
+      } catch (e) {}
+
+      applyCourseProgressUI();
+
+      if (currentUser && isFirebaseReady && firestoreDb) {
+        try {
+          const docRef = firestoreDb.collection('anotacoes').doc(currentUser.uid);
+          await docRef.set({
+            progresso: {},
+            atualizadoEm: window.firebase.firestore.FieldValue.serverTimestamp()
+          }, { merge: true });
+        } catch (err) {
+          console.warn('Erro ao zerar progresso no Firestore:', err);
+        }
+      }
+    }
+
+    /* ================= BUSCA NO ÍNDICE DO CADERNO & SINCRONIZAÇÃO ================= */
+    function setupSearchInputs() {
+      const topSearch = document.getElementById('searchInput');
+      const sidebarSearch = document.getElementById('sidebarSearchInput');
+
+      if (topSearch) {
+        topSearch.addEventListener('input', (e) => {
+          const val = e.target.value;
+          if (sidebarSearch && sidebarSearch.value !== val) {
+            sidebarSearch.value = val;
+          }
+          executeCadernoSearch(val);
+        });
+      }
+
+      if (sidebarSearch) {
+        sidebarSearch.addEventListener('input', (e) => {
+          const val = e.target.value;
+          if (topSearch && topSearch.value !== val) {
+            topSearch.value = val;
+          }
+          executeCadernoSearch(val);
+        });
+      }
+    }
+
+    function clearCadernoSearch() {
+      const topSearch = document.getElementById('searchInput');
+      const sidebarSearch = document.getElementById('sidebarSearchInput');
+      if (topSearch) topSearch.value = '';
+      if (sidebarSearch) sidebarSearch.value = '';
+      executeCadernoSearch('');
+    }
+
+    function executeCadernoSearch(rawQuery) {
+      const query = normalizeText(rawQuery);
+      const clearBtn = document.getElementById('sidebarSearchClear');
+      const countEl = document.getElementById('sidebarSearchCount');
+
+      if (clearBtn) {
+        clearBtn.style.display = query ? 'block' : 'none';
+      }
+
+      const navItems = document.querySelectorAll('#sidebarNavList .nav-item');
+      let foundBlocks = 0;
+
+      navItems.forEach(item => {
+        const link = item.querySelector('a');
+        if (!link) return;
+        const href = link.getAttribute('href');
+        if (!href || !href.startsWith('#')) return;
+
+        const blockId = href.substring(1);
+        const section = document.getElementById(blockId);
+        if (!section) return;
+
+        if (!query) {
+          // Show everything
+          item.style.display = '';
+          section.style.display = '';
+          return;
+        }
+
+        // Title and content search normalized
+        const titleText = normalizeText(section.querySelector('.block-title')?.textContent || '');
+        const tagText = normalizeText(section.querySelector('.block-tag')?.textContent || '');
+        const contentText = normalizeText(section.querySelector('.block-content')?.textContent || '');
+
+        const matches = titleText.includes(query) || tagText.includes(query) || contentText.includes(query);
+
+        if (matches) {
+          item.style.display = '';
+          section.style.display = '';
+          foundBlocks++;
+        } else {
+          item.style.display = 'none';
+          section.style.display = 'none';
+        }
+      });
+
+      if (countEl) {
+        if (query) {
+          countEl.textContent = `${foundBlocks} bloco${foundBlocks === 1 ? '' : 's'} encontrado${foundBlocks === 1 ? '' : 's'}`;
+          countEl.classList.add('visible');
+        } else {
+          countEl.classList.remove('visible');
+        }
+      }
     }
 
     // Checklist functionality with localStorage
@@ -4881,6 +5402,14 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           const data = docSnap.data();
           if (data && data.blocos && typeof data.blocos === 'object') {
             cloudBlocos = data.blocos;
+          }
+          // Load Course Progress from Firestore
+          if (data && data.progresso && typeof data.progresso === 'object') {
+            courseProgressState = { ...courseProgressState, ...data.progresso };
+            try {
+              localStorage.setItem(COURSE_STORAGE_KEY, JSON.stringify(courseProgressState));
+            } catch (e) {}
+            applyCourseProgressUI();
           }
         }
 
@@ -5982,14 +6511,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         assistantPanel.classList.remove('aberto', 'active');
         assistantPanel.setAttribute('aria-hidden', 'true');
       }
-
-      const targetEl = document.getElementById(blockId);
-      if (targetEl) {
-        if (!targetEl.classList.contains('open')) {
-          targetEl.classList.add('open');
-        }
-        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      openSingleBlock(blockId, true);
     }
 
     // Inicialização ao carregar
