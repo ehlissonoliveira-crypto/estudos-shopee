@@ -1498,7 +1498,6 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       gap: 0.35rem;
     }
 
-    .assistant-config-btn,
     .assistant-close-btn {
       background: transparent;
       border: none;
@@ -1510,163 +1509,12 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       align-items: center;
       justify-content: center;
       font-size: 0.95rem;
-      transition: color 0.2s, background 0.2s, transform 0.2s;
-    }
-
-    .assistant-config-btn:hover {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.1);
-      transform: rotate(30deg);
+      transition: color 0.2s, background 0.2s;
     }
 
     .assistant-close-btn:hover {
       color: var(--text);
       background: rgba(255, 255, 255, 0.1);
-    }
-
-    /* AI Config Area */
-    .assistant-config-area {
-      background: var(--bg);
-      border-bottom: 1px solid var(--border);
-      padding: 0.85rem 1rem;
-      animation: configFadeIn 0.2s ease;
-    }
-
-    @keyframes configFadeIn {
-      from { opacity: 0; transform: translateY(-6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .assistant-config-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.35rem;
-    }
-
-    .assistant-config-title {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .assistant-config-desc {
-      font-size: 0.775rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-      margin: 0 0 0.65rem 0;
-    }
-
-    .assistant-config-desc a {
-      color: var(--accent-text);
-      text-decoration: underline;
-    }
-
-    .assistant-config-input {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: calc(var(--radius) - 2px);
-      padding: 0.5rem 0.75rem;
-      color: var(--text);
-      font-size: 0.825rem;
-      font-family: inherit;
-      box-sizing: border-box;
-      transition: border-color 0.2s;
-    }
-
-    .assistant-config-input:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
-
-    .config-buttons-row {
-      display: flex;
-      gap: 0.4rem;
-      margin-top: 0.5rem;
-      margin-bottom: 0.65rem;
-      flex-wrap: wrap;
-    }
-
-    .btn-config-action {
-      flex: 1 1 auto;
-      padding: 0.4rem 0.55rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      border-radius: 6px;
-      cursor: pointer;
-      font-family: inherit;
-      border: 1px solid transparent;
-      transition: all 0.2s ease;
-      text-align: center;
-      white-space: nowrap;
-    }
-
-    .btn-config-action.save {
-      background: var(--accent);
-      color: #ffffff;
-    }
-
-    .btn-config-action.save:hover {
-      background: #ff6e38;
-    }
-
-    .btn-config-action.test {
-      background: rgba(56, 189, 248, 0.15);
-      border-color: rgba(56, 189, 248, 0.35);
-      color: var(--color-info);
-    }
-
-    .btn-config-action.test:hover {
-      background: rgba(56, 189, 248, 0.25);
-      border-color: var(--color-info);
-    }
-
-    .btn-config-action.remove {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: var(--border);
-      color: var(--text-muted);
-    }
-
-    .btn-config-action.remove:hover {
-      background: var(--color-danger-bg);
-      border-color: var(--color-danger);
-      color: var(--color-danger);
-    }
-
-    .gemini-diag-box {
-      background: var(--color-danger-bg);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      color: #fee2e2;
-      border-radius: 6px;
-      padding: 0.65rem 0.85rem;
-      font-size: 0.775rem;
-      line-height: 1.45;
-      text-align: left;
-    }
-
-    .gemini-diag-box code {
-      background: rgba(0, 0, 0, 0.35);
-      padding: 0.1rem 0.35rem;
-      border-radius: 3px;
-      color: #fca5a5;
-      font-family: monospace;
-    }
-
-    .assistant-config-status {
-      font-size: 0.75rem;
-      line-height: 1.35;
-      padding: 0.4rem 0.6rem;
-      border-radius: 6px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-    }
-
-    .assistant-config-status.active {
-      color: var(--color-success);
-      border-color: rgba(52, 211, 153, 0.3);
-      background: var(--color-success-bg);
     }
 
     .assistant-messages {
@@ -5303,45 +5151,12 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         <div class="assistant-header-title">
           <span>🤖</span> Assistente de Estudos
         </div>
-        <div id="assistantHeaderStatus" class="assistant-header-sub">Responde com base no conteúdo desta página</div>
+        <div id="assistantHeaderStatus" class="assistant-header-sub">Responde com base no conteúdo do curso</div>
       </div>
       <div class="assistant-header-actions">
-        <button class="assistant-config-btn" onclick="toggleAssistantConfig()" aria-label="Configurações de IA" title="Configurar IA Google Gemini">
-          ⚙️
-        </button>
         <button class="assistant-close-btn" onclick="toggleAssistant()" aria-label="Fechar assistente">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
-      </div>
-    </div>
-
-    <!-- AI Config Drawer -->
-    <div id="assistantConfigArea" class="assistant-config-area" style="display: none;">
-      <div class="assistant-config-header">
-        <span class="assistant-config-title">Conectar IA (opcional)</span>
-        <button type="button" class="assistant-close-btn" onclick="toggleAssistantConfig()" style="font-size:0.8rem; padding:0.15rem 0.35rem;" aria-label="Fechar configurações">✕</button>
-      </div>
-      <p class="assistant-config-desc">
-        Cole sua chave gratuita do Google AI Studio (<a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">aistudio.google.com</a> → Get API key). A chave fica salva apenas no SEU navegador. A chave deve vir do Google AI Studio (aistudio.google.com → Get API key) e começa com 'AIza'. Chaves do Google Cloud com outro formato podem não funcionar.
-      </p>
-      <div>
-        <input type="password" id="geminiApiKeyInput" class="assistant-config-input" placeholder="Cole sua API Key aqui (ex: AIzaSy...)" autocomplete="off" />
-      </div>
-      <div class="config-buttons-row">
-        <button type="button" class="btn-config-action save" onclick="saveGeminiApiKey()">Salvar chave</button>
-        <button type="button" class="btn-config-action test" id="btnTestGemini" onclick="testGeminiConnection()">🔌 Testar conexão</button>
-        <button type="button" class="btn-config-action remove" onclick="removeGeminiApiKey()">Remover chave</button>
-      </div>
-      <div id="geminiConfigStatusBadge" class="assistant-config-status">
-        ⚪ Modo local — usando busca no material de estudo
-      </div>
-      <div style="margin-top: 0.75rem; padding-top: 0.65rem; border-top: 1px solid var(--border);">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
-          <span style="font-size: 0.8rem; font-weight: 700; color: var(--text);">Segurança Firebase Firestore</span>
-          <button type="button" class="btn-copy-rules" onclick="copyFirestoreRules()">Copiar regras</button>
-        </div>
-        <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0 0 0.35rem 0;">Regras recomendadas para proteger suas anotações por usuário:</p>
-        <code class="rules-card-code" style="margin: 0;">match /anotacoes/{userId} { allow read, write: if request.auth != null && request.auth.uid == userId; }</code>
       </div>
     </div>
 
@@ -7125,282 +6940,13 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       return null;
     }
 
-    /* ================= INTEGRAÇÃO GEMINI IA & MODO LOCAL ================= */
-    const GEMINI_STORAGE_KEY = "shopee-estudo-gemini-key";
-    const GEMINI_MODEL_STORAGE_KEY = "shopee-estudo-gemini-model";
-    const GEMINI_MODELS_FALLBACK_ORDER = [
-      'gemini-2.0-flash',
-      'gemini-1.5-flash',
-      'gemini-flash-latest',
-      'gemini-2.5-flash'
-    ];
-
-    const GEMINI_STUDY_MATERIAL = `Você é o assistente de estudos de uma página sobre vender do zero na Shopee. Responda em português brasileiro, de forma clara, objetiva e prática, em no máximo 150 palavras. Use o material de estudo abaixo como base principal. Se a pergunta fugir do material, responda com conhecimento geral de e-commerce/Shopee. MATERIAL DE ESTUDO: 1-anúncios sem visitas (Shopee é motor de busca; 5 motivos: título genérico, atributos incompletos, preço fora do mercado, anúncio novo em teste ~20 dias, imagem ruim); 2-Shopee Ads (ROAS = retorno do investimento; ROAS mínimo = preço ÷ margem de contribuição; rentabilidade ROAS 14-17 vs escala 10-11; anúncio agrupado, orçamento 10-15/produto/dia, rodar 7+ dias); 3-hierarquia do anúncio (conversão: fotos/vídeos/descrição; indexação: título/categoria/preço; fiscal: SKU/peso/dimensões); 4-loja nova: Ads para gerar avaliações e dados, GMV Max 2026; 5-Shopee Live: engajamento e retenção, 3 blocos, CTA, preços exclusivos; 6-Shopee Vídeo: postar diariamente, estilo TikTok; 7-Cupom Inteligente: desconto pago pela Shopee, Seller Center → Shop Ads; 8-Afiliados: campanha aberta (volume) e exclusiva (influenciadores); 9-ticket médio: cupons, kits, produtos maiores; 10-reputação: devoluções derrubam visibilidade, datas duplas; 11-Vendedor Indicado: CNPJ, frete grátis extra, preparação ≤1 dia, ≥30 pedidos/30d, avaliação ≥4.5, resposta ≥60%, penalidade ≤1; 12-regras: nunca links na descrição, marca d'água não afeta relevância, direito autoral de fotos; 13-logística: Correios→transportadoras (PJ), frete por peso/dimensões, ponto de coleta não residencial; 14-operação: penalidades (3+ pontos = restrições), fornecedores backup, conversão > menor preço, avaliações negativas: contatar/solucionar/reavaliar]`;
-
-    // Histórico de conversação na sessão (últimas mensagens para contexto)
-    const assistantChatHistory = [];
-
-    function getStoredGeminiKey() {
-      try {
-        const key = localStorage.getItem(GEMINI_STORAGE_KEY);
-        return key && key.trim() ? key.trim() : null;
-      } catch (e) {
-        return null;
-      }
-    }
-
-    function getPreferredGeminiModel() {
-      try {
-        const stored = localStorage.getItem(GEMINI_MODEL_STORAGE_KEY);
-        if (stored && GEMINI_MODELS_FALLBACK_ORDER.includes(stored)) {
-          return stored;
-        }
-      } catch (e) {}
-      return GEMINI_MODELS_FALLBACK_ORDER[0];
-    }
-
-    function maskApiKey(key) {
-      if (!key) return '(nenhuma chave)';
-      const trimmed = key.trim();
-      return trimmed.length > 6 ? trimmed.slice(0, 6) + '...' : trimmed + '...';
-    }
-
-    function interpretGeminiApiError(status, message) {
-      const msgLower = (message || '').toLowerCase();
-      if (status === 400 && (msgLower.includes('api key not valid') || msgLower.includes('api_key_invalid') || msgLower.includes('key not valid'))) {
-        return "A chave é inválida ou está no formato errado. Chaves do AI Studio começam com 'AIza'. Gere uma nova em aistudio.google.com → Get API key.";
-      }
-      if (status === 403) {
-        return "A chave existe mas não tem permissão para a API Generative Language. No Google Cloud Console, ative a 'Generative Language API' para o projeto desta chave, ou gere a chave direto no AI Studio.";
-      }
-      if (status === 429) {
-        return "Limite de uso atingido. Aguarde alguns minutos.";
-      }
-      return message || "Erro de comunicação com os servidores do Google Gemini.";
-    }
-
-    function renderGeminiDiagnosticBox(status, rawMessage, keyUsed) {
-      const tip = interpretGeminiApiError(status, rawMessage);
-      const masked = maskApiKey(keyUsed);
-      return `
-        <div class="gemini-diag-box">
-          <div style="font-weight:700; display:flex; align-items:center; gap:0.4rem; margin-bottom:0.35rem; color:#f87171;">
-            <span>🚨</span> Diagnóstico da API Gemini
-          </div>
-          <div><strong>Código HTTP:</strong> ${escapeHtml(String(status ?? 'Erro de Rede'))}</div>
-          <div><strong>Chave utilizada:</strong> <code>${escapeHtml(masked)}</code></div>
-          <div style="margin-top:0.25rem;"><strong>Mensagem da API:</strong> <span style="font-family:monospace; word-break:break-word;">${escapeHtml(rawMessage || 'Sem mensagem retornada')}</span></div>
-          <div style="margin-top:0.4rem; padding-top:0.4rem; border-top:1px dashed rgba(239,68,68,0.3); color:#fca5a5;">
-            <strong>💡 Dica:</strong> ${escapeHtml(tip)}
-          </div>
-        </div>
-      `;
-    }
-
-    async function callGeminiWithFallback(apiKey, bodyPayload) {
-      const preferred = getPreferredGeminiModel();
-      // Test the preferred model first, followed by others in the ordered sequence
-      const modelsSequence = [preferred, ...GEMINI_MODELS_FALLBACK_ORDER.filter(m => m !== preferred)];
-
-      let lastStatus = 0;
-      let lastErrorMessage = '';
-
-      for (let i = 0; i < modelsSequence.length; i++) {
-        const model = modelsSequence[i];
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
-
-        let response;
-        try {
-          response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(bodyPayload)
-          });
-        } catch (netErr) {
-          throw {
-            status: 0,
-            message: netErr.message || 'Falha de rede ou conexão offline',
-            model: model
-          };
-        }
-
-        if (response.ok) {
-          const data = await response.json();
-          try {
-            localStorage.setItem(GEMINI_MODEL_STORAGE_KEY, model);
-          } catch (e) {}
-          return { data, model };
-        }
-
-        lastStatus = response.status;
-        let errMsg = `HTTP ${response.status}`;
-        try {
-          const errData = await response.json();
-          if (errData?.error?.message) {
-            errMsg = errData.error.message;
-          }
-        } catch (e) {}
-        lastErrorMessage = errMsg;
-
-        // Se retornar 404 (modelo não encontrado), tenta o próximo modelo na sequência
-        if (response.status === 404) {
-          continue;
-        } else {
-          // Erro de autenticação, permissão, quota, etc. Interrompe e lança diagnóstico
-          throw {
-            status: lastStatus,
-            message: lastErrorMessage,
-            model: model
-          };
-        }
-      }
-
-      // Todos os modelos retornaram 404
-      throw {
-        status: lastStatus || 404,
-        message: lastErrorMessage || 'Nenhum modelo Gemini suportado foi encontrado.',
-        model: modelsSequence[modelsSequence.length - 1]
-      };
-    }
-
-    async function testGeminiConnection() {
-      const input = document.getElementById('geminiApiKeyInput');
-      const val = (input && input.value ? input.value.trim() : '') || getStoredGeminiKey();
-      const statusBadge = document.getElementById('geminiConfigStatusBadge');
-      const btn = document.getElementById('btnTestGemini');
-
-      if (!val) {
-        if (statusBadge) {
-          statusBadge.className = 'assistant-config-status';
-          statusBadge.innerHTML = '⚠️ Nenhuma chave informada. Digite sua API Key acima ou salve antes de testar.';
-        }
-        return;
-      }
-
-      if (btn) btn.disabled = true;
-      if (statusBadge) {
-        statusBadge.className = 'assistant-config-status';
-        statusBadge.innerHTML = '⏳ Testando conexão com a Google Gemini API...';
-      }
-
-      try {
-        const result = await callGeminiWithFallback(val, {
-          contents: [{ parts: [{ text: "Responda apenas: OK" }] }]
-        });
-
-        if (statusBadge) {
-          statusBadge.className = 'assistant-config-status active';
-          statusBadge.innerHTML = '✅ Conexão OK! A IA está funcionando.';
-        }
-        updateAssistantStatusDisplay();
-      } catch (err) {
-        if (statusBadge) {
-          statusBadge.className = 'assistant-config-status';
-          statusBadge.innerHTML = renderGeminiDiagnosticBox(err.status, err.message, val);
-        }
-      } finally {
-        if (btn) btn.disabled = false;
-      }
-    }
-
-    function updateAssistantStatusDisplay() {
-      const key = getStoredGeminiKey();
-      const badge = document.getElementById('geminiConfigStatusBadge');
-      const input = document.getElementById('geminiApiKeyInput');
-      const sub = document.getElementById('assistantHeaderStatus');
-      const preferredModel = getPreferredGeminiModel();
-
-      if (key) {
-        if (badge && !badge.innerHTML.includes('gemini-diag-box')) {
-          badge.className = 'assistant-config-status active';
-          badge.textContent = `✅ IA conectada (${preferredModel}) — pronta para uso`;
-        }
-        if (sub) {
-          sub.textContent = `✅ IA conectada — ${preferredModel}`;
-        }
-        if (input && !input.value) {
-          input.value = key;
-        }
-      } else {
-        if (badge && !badge.innerHTML.includes('gemini-diag-box')) {
-          badge.className = 'assistant-config-status';
-          badge.textContent = '⚪ Modo local — usando busca no material de estudo';
-        }
-        if (sub) {
-          sub.textContent = 'Modo local — usando caderno de estudos';
-        }
-        if (input && !input.value) {
-          input.value = '';
-        }
-      }
-    }
-
-    function toggleAssistantConfig() {
-      const configArea = document.getElementById('assistantConfigArea');
-      if (!configArea) return;
-      const isHidden = configArea.style.display === 'none' || configArea.style.display === '';
-      configArea.style.display = isHidden ? 'block' : 'none';
-      if (isHidden) {
-        updateAssistantStatusDisplay();
-        const input = document.getElementById('geminiApiKeyInput');
-        if (input) input.focus();
-      }
-    }
-
-    function saveGeminiApiKey() {
-      const input = document.getElementById('geminiApiKeyInput');
-      const val = (input ? input.value : '').trim();
-      if (!val) {
-        alert('Por favor, cole sua chave da Google Gemini API antes de salvar.');
-        return;
-      }
-      try {
-        localStorage.setItem(GEMINI_STORAGE_KEY, val);
-        updateAssistantStatusDisplay();
-        const badge = document.getElementById('geminiConfigStatusBadge');
-        if (badge) {
-          badge.className = 'assistant-config-status active';
-          badge.textContent = '✓ Chave salva no navegador! Clique em "🔌 Testar conexão" para validar.';
-        }
-      } catch (e) {
-        alert('Não foi possível salvar no navegador.');
-      }
-    }
-
-    function removeGeminiApiKey() {
-      try {
-        localStorage.removeItem(GEMINI_STORAGE_KEY);
-        localStorage.removeItem(GEMINI_MODEL_STORAGE_KEY);
-        const input = document.getElementById('geminiApiKeyInput');
-        if (input) input.value = '';
-        updateAssistantStatusDisplay();
-      } catch (e) {}
-    }
-
-    function formatAiResponse(rawText) {
-      if (!rawText) return '';
-      // Escape HTML
-      let formatted = escapeHtml(rawText);
-
-      // Negrito **texto**
-      formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      // Itálico *texto*
-      formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
-      // Código `codigo`
-      formatted = formatted.replace(/`([^`]+)`/g, '<code>$1</code>');
-      // Quebras de linha
-      formatted = formatted.replace(/\n/g, '<br>');
-
-      return formatted;
-    }
-
     function sendChipQuery(text) {
       const input = document.getElementById('assistantInput');
       input.value = text;
       sendAssistantMessage();
     }
 
-    async function sendAssistantMessage() {
+    function sendAssistantMessage() {
       const input = document.getElementById('assistantInput');
       const text = input.value.trim();
       if (!text) return;
@@ -7423,89 +6969,13 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       messagesContainer.appendChild(typingBubble);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-      const geminiApiKey = getStoredGeminiKey();
-
-      if (geminiApiKey) {
-        // MODO IA REAL COM GEMINI API
-        try {
-          // Prepara histórico com as últimas 4 mensagens mantendo alternância
-          const recentTurns = assistantChatHistory.slice(-4);
-          const contents = [];
-
-          let expectedRole = 'user';
-          for (const msg of recentTurns) {
-            const role = msg.role === 'model' ? 'model' : 'user';
-            if (role === expectedRole) {
-              contents.push({
-                role: role,
-                parts: [{ text: msg.text }]
-              });
-              expectedRole = role === 'user' ? 'model' : 'user';
-            }
-          }
-
-          // Se a última do histórico foi 'user', descarta para garantir alternância
-          if (contents.length > 0 && contents[contents.length - 1].role === 'user') {
-            contents.pop();
-          }
-
-          // Adiciona a pergunta atual com o system prompt / material de estudo
-          const promptCompleto = `${GEMINI_STUDY_MATERIAL}\n\nPERGUNTA DO USUÁRIO:\n${text}`;
-          contents.push({
-            role: 'user',
-            parts: [{ text: promptCompleto }]
-          });
-
-          // Chamada com fallback automático de modelos
-          const result = await callGeminiWithFallback(geminiApiKey, { contents: contents });
-          const aiResponseText = result.data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-          if (!aiResponseText) {
-            throw { status: 200, message: 'Resposta vazia retornada pela API' };
-          }
-
-          // Salva no histórico da sessão
-          assistantChatHistory.push({ role: 'user', text: text });
-          assistantChatHistory.push({ role: 'model', text: aiResponseText });
-
-          // Remove digitando
-          if (typingBubble.parentNode) {
-            typingBubble.parentNode.removeChild(typingBubble);
-          }
-
-          // Bolha da IA
-          const botBubble = document.createElement('div');
-          botBubble.className = 'chat-bubble chat-bubble-bot';
-          botBubble.innerHTML = formatAiResponse(aiResponseText);
-          messagesContainer.appendChild(botBubble);
-          messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-        } catch (err) {
-          // Exibe caixa de diagnóstico detalhada em vez de erro genérico
-          if (typingBubble.parentNode) {
-            typingBubble.parentNode.removeChild(typingBubble);
-          }
-
-          const errorBubble = document.createElement('div');
-          errorBubble.className = 'chat-bubble chat-bubble-bot';
-          errorBubble.style.borderColor = 'rgba(239, 68, 68, 0.5)';
-          errorBubble.style.maxWidth = '92%';
-          errorBubble.innerHTML = renderGeminiDiagnosticBox(err.status, err.message, geminiApiKey);
-          messagesContainer.appendChild(errorBubble);
-
-          // Executa busca local de fallback
-          executeLocalSearchResponse(text, messagesContainer);
+      // Responde com base no conteúdo do curso (busca local na base)
+      setTimeout(() => {
+        if (typingBubble.parentNode) {
+          typingBubble.parentNode.removeChild(typingBubble);
         }
-
-      } else {
-        // MODO LOCAL (Sem chave de IA configurada)
-        setTimeout(() => {
-          if (typingBubble.parentNode) {
-            typingBubble.parentNode.removeChild(typingBubble);
-          }
-          executeLocalSearchResponse(text, messagesContainer);
-        }, 500);
-      }
+        executeLocalSearchResponse(text, messagesContainer);
+      }, 450);
     }
 
     function executeLocalSearchResponse(text, messagesContainer) {
@@ -7525,7 +6995,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       } else {
         botBubble.innerHTML = `
           Não encontrei uma resposta exata no caderno para essa pergunta. Experimente buscar termos como <strong>ROAS, comissão, 20 dias, Shopee Live, vídeos, Vendedor Indicado, MEI/CNPJ, por onde começar ou penalidades</strong>.<br><br>
-          Você também pode consultar diretamente o Bloco correspondente no índice ao lado ou conectar a <strong>IA Google Gemini</strong> no ícone ⚙️!
+          Você também pode consultar diretamente o bloco correspondente no índice ao lado.
         `;
       }
 
@@ -7545,7 +7015,6 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     // Inicialização ao carregar
     window.addEventListener('DOMContentLoaded', () => {
       loadSavedNotes();
-      updateAssistantStatusDisplay();
       initFirebaseGracefully();
     });
   </script>
