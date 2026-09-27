@@ -855,41 +855,108 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       margin: 0;
       display: flex;
       flex-direction: column;
-      gap: 0.6rem;
+      gap: 0.4rem;
     }
 
     .block-checklist-item {
       display: flex;
-      align-items: flex-start;
-      gap: 0.65rem;
+      align-items: center;
+      gap: 0.75rem;
       font-size: 0.875rem;
       color: var(--text);
       line-height: 1.45;
+      padding: 0.6rem 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.2s ease, color 0.2s ease;
+      min-height: 44px;
+      box-sizing: border-box;
+    }
+
+    .block-checklist-item:hover {
+      background: rgba(255, 255, 255, 0.04);
     }
 
     .block-checklist-item input[type="checkbox"] {
       appearance: none;
       -webkit-appearance: none;
-      width: 17px;
-      height: 17px;
-      margin-top: 0.15rem;
-      border: 1.5px solid var(--color-success);
+      width: 20px;
+      height: 20px;
+      margin: 0;
+      border: 1.5px solid rgba(16, 185, 129, 0.6);
       border-radius: 4px;
-      background: rgba(16, 185, 129, 0.15);
+      background: rgba(16, 185, 129, 0.08);
       position: relative;
-      cursor: default;
+      cursor: pointer;
       flex-shrink: 0;
-      pointer-events: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .block-checklist-item input[type="checkbox"]:hover {
+      border-color: var(--color-success);
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    }
+
+    .block-checklist-item input[type="checkbox"]:checked {
+      background: var(--color-success);
+      border-color: var(--color-success);
     }
 
     .block-checklist-item input[type="checkbox"]:checked::after {
       content: "✔";
       position: absolute;
-      left: 2px;
-      top: -1px;
-      font-size: 11px;
+      left: 3.5px;
+      top: -0.5px;
+      font-size: 13px;
       font-weight: 800;
+      color: #0d1218;
+    }
+
+    .block-checklist-item span {
+      transition: color 0.2s ease, text-decoration 0.2s ease, opacity 0.2s ease;
+    }
+
+    .block-checklist-item.checked {
       color: var(--color-success);
+    }
+
+    .block-checklist-item.checked span {
+      text-decoration: line-through;
+      color: var(--color-success);
+      opacity: 0.9;
+    }
+
+    .block-checklist-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.35rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .block-checklist-badge.has-checked {
+      color: #6ee7b7;
+      border-color: rgba(16, 185, 129, 0.35);
+      background: rgba(16, 185, 129, 0.08);
+    }
+
+    .block-checklist-badge.all-checked {
+      color: var(--color-success);
+      border-color: rgba(16, 185, 129, 0.45);
+      background: var(--color-success-bg);
+      font-weight: 700;
     }
 
     /* Embedded Bloco 2 ROAS Calculator */
@@ -2108,6 +2175,281 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       }
     }
 
+    /* Calculadora de Precificação Styles */
+    .calc-prec-wrapper {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .calc-prec-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .calc-field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .calc-field-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .calc-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .calc-input-wrap .prefix,
+    .calc-input-wrap .suffix {
+      position: absolute;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .calc-input-wrap .prefix {
+      left: 0.75rem;
+    }
+
+    .calc-input-wrap .suffix {
+      right: 0.75rem;
+    }
+
+    .calc-input-wrap input,
+    .calc-input-wrap select {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.55rem 0.75rem;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: inherit;
+      box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .calc-input-wrap.has-prefix input {
+      padding-left: 2.2rem;
+    }
+
+    .calc-input-wrap.has-suffix input {
+      padding-right: 2.2rem;
+    }
+
+    .calc-input-wrap input:focus,
+    .calc-input-wrap select:focus {
+      outline: none;
+      border-color: var(--color-success);
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    }
+
+    .calc-result-box {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(5, 150, 105, 0.05) 100%);
+      border: 2px solid rgba(16, 185, 129, 0.5);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.12);
+    }
+
+    .calc-result-box.error {
+      background: var(--color-danger-bg);
+      border-color: rgba(239, 68, 68, 0.5);
+      box-shadow: 0 8px 24px rgba(239, 68, 68, 0.12);
+    }
+
+    .calc-result-tag {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-success);
+    }
+
+    .calc-result-box.error .calc-result-tag {
+      color: var(--color-danger);
+    }
+
+    .calc-result-price {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: var(--color-success);
+      line-height: 1.1;
+    }
+
+    .calc-result-box.error .calc-result-price {
+      color: var(--color-danger);
+      font-size: 1.15rem;
+    }
+
+    .calc-result-margin-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(16, 185, 129, 0.18);
+      color: #6ee7b7;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .calc-breakdown-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .calc-breakdown-header {
+      padding: 0.85rem 1.15rem;
+      background: var(--surface-hover);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .calc-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .calc-table tr {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      transition: background-color 0.15s ease;
+    }
+
+    .calc-table tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .calc-table td {
+      padding: 0.65rem 1.15rem;
+    }
+
+    .calc-table td.col-desc {
+      color: var(--text);
+    }
+
+    .calc-table td.col-val {
+      text-align: right;
+      font-weight: 600;
+      color: var(--text);
+      font-family: monospace, monospace;
+      font-size: 0.9rem;
+    }
+
+    .calc-table tr.total-row {
+      background: rgba(16, 185, 129, 0.08);
+      border-top: 2px solid rgba(16, 185, 129, 0.3);
+      font-weight: 700;
+    }
+
+    .calc-table tr.total-row td {
+      padding: 0.85rem 1.15rem;
+      font-size: 1rem;
+      color: var(--color-success);
+    }
+
+    .calc-ref-details {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.85rem 1.15rem;
+      font-size: 0.85rem;
+    }
+
+    .calc-ref-details summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--accent-text);
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .calc-ref-content {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .ref-tables-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .ref-table-card {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+    }
+
+    .ref-table-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .ref-mini-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+
+    .ref-mini-table td {
+      padding: 0.35rem 0.4rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .ref-mini-table td:last-child {
+      text-align: right;
+      font-weight: 600;
+      color: var(--accent-text);
+    }
+
+    .calc-notice-pix {
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      color: #bae6fd;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+
     /* Print media styling */
     @media print {
       .sidebar-nav, .search-box, .btn-print, .auth-header-container, .calc-box, .assistant-fab, .notes-fab, .assistant-panel, .notes-panel, .btn-notes-toggle, .block-notes-area, .login-gate-overlay, .local-mode-top-banner {
@@ -2214,6 +2556,12 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
             <a href="#bloco-2">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
               2. Shopee Ads & ROAS
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#calc-precificacao" style="background: rgba(16, 185, 129, 0.12); color: #34d399; font-weight: 600; border: 1px dashed rgba(52, 211, 153, 0.35);">
+              <span style="font-size: 1rem; line-height: 1;">🧮</span>
+              Calculadora de Precificação
             </a>
           </li>
           <li class="nav-item">
@@ -2501,23 +2849,23 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <div class="block-checklist-header">✅ Checklist do bloco</div>
               <ul class="block-checklist-items">
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Revisar o título pensando como o cliente</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Preencher todos os atributos</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Analisar preços da concorrência (ficar na média ou ligeiramente abaixo)</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Usar ShopAds só em produtos que já têm visitas, cliques e carrinhos</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Trocar a imagem principal se necessário (luz natural, fundo branco, sem distrações)</span>
                 </li>
               </ul>
@@ -2771,18 +3119,236 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <div class="block-checklist-header">✅ Checklist do bloco</div>
               <ul class="block-checklist-items">
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Calcular o ROAS mínimo antes de anunciar</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Separar grupos por estratégia (nunca misturar rentabilidade com escala)</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Rodar pelo menos 7 dias antes de julgar o resultado</span>
                 </li>
               </ul>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ================= SEÇÃO: CALCULADORA DE PRECIFICAÇÃO ================= -->
+        <section id="calc-precificacao" class="study-block shell-fade" style="border-color: rgba(16, 185, 129, 0.35);">
+          <div class="block-header" onclick="handleBlockHeaderClick('calc-precificacao')" style="background: rgba(16, 185, 129, 0.04);">
+            <div class="block-header-left">
+              <div class="block-tag" style="color: var(--color-success);">
+                Ferramenta Prática
+                <span class="source-badge" style="color: #6ee7b7;">• Baseada na Planilha Oficial Shopee CNPJ</span>
+              </div>
+              <h2 class="block-title" style="color: #a7f3d0;">🧮 Calculadora de Precificação</h2>
+            </div>
+            <div class="block-header-actions" onclick="event.stopPropagation()">
+              <button type="button" class="btn-notes-toggle" id="btn-notes-calc-precificacao" onclick="toggleNotes(event, 'calc-precificacao')">
+                📝 Anotações <span class="notes-dot" id="dot-calc-precificacao">●</span>
+              </button>
+            </div>
+            <div class="toggle-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+          </div>
+
+          <div class="block-content">
+            <div class="block-notes-area" id="notes-area-calc-precificacao" style="display: none;">
+              <div class="block-notes-toolbar">
+                <span class="block-notes-title">📝 Anotações — Calculadora de Precificação</span>
+                <span class="block-notes-saved" id="status-notes-calc-precificacao">✓ Salvo</span>
+              </div>
+              <textarea id="note-input-calc-precificacao" class="block-notes-input" placeholder="Escreva suas anotações sobre precificação, custos e margem..." oninput="handleNoteTyping('calc-precificacao', this.value)"></textarea>
+            </div>
+
+            <!-- Conceito-Chave da Precificação -->
+            <div class="key-concept" style="border-left-color: var(--color-success); background: rgba(16, 185, 129, 0.08);">
+              💡 <strong>Precificação Inteligente Shopee CNPJ:</strong> As taxas da Shopee variam automaticamente por faixa de preço final (regras vigentes desde 01/03/2026). A calculadora itera o valor até estabilizar na faixa exata e aplica o <strong>arredondamento comercial para cima (,50 ou ,90)</strong>, garantindo que sua margem real líquida fique sempre igual ou superior à desejada.
+            </div>
+
+            <div class="calc-prec-wrapper">
+              <!-- Entradas da Calculadora -->
+              <div class="calc-prec-grid">
+                <!-- Custo do Produto -->
+                <div class="calc-field-group">
+                  <label for="calcPrecCustoProd">
+                    <span>📦 Custo do produto (R$) *</span>
+                  </label>
+                  <div class="calc-input-wrap has-prefix">
+                    <span class="prefix">R$</span>
+                    <input type="number" id="calcPrecCustoProd" value="20.00" step="0.50" min="0.01" oninput="calculatePrecificacaoShopee()" placeholder="0,00" required>
+                  </div>
+                </div>
+
+                <!-- Embalagem Dropdown -->
+                <div class="calc-field-group">
+                  <label for="calcPrecEmbalagemTipo">
+                    <span>✉️ Tipo de embalagem</span>
+                  </label>
+                  <div class="calc-input-wrap">
+                    <select id="calcPrecEmbalagemTipo" onchange="handleEmbalagemChange()">
+                      <option value="PP">Saco PP (R$ 0,02/un)</option>
+                      <option value="P">Saco P (R$ 0,03/un)</option>
+                      <option value="M" selected>Saco M (R$ 0,07/un)</option>
+                      <option value="G">Saco G (R$ 0,08/un)</option>
+                      <option value="Kraft">Kraft (R$ 0,72/metro)</option>
+                      <option value="Stretch">Stretch (R$ 0,26/metro)</option>
+                      <option value="Papelao">Papelão (R$ 1,84/metro)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Embalagem Quantidade/Metros -->
+                <div class="calc-field-group">
+                  <label for="calcPrecEmbalagemQtd" id="calcPrecEmbalagemQtdLabel">
+                    <span>📏 Quantidade (unidades)</span>
+                  </label>
+                  <div class="calc-input-wrap">
+                    <input type="number" id="calcPrecEmbalagemQtd" value="1" step="0.1" min="0.01" oninput="calculatePrecificacaoShopee()">
+                  </div>
+                </div>
+
+                <!-- Imposto % -->
+                <div class="calc-field-group">
+                  <label for="calcPrecImposto">
+                    <span>🏛️ Imposto da nota</span>
+                  </label>
+                  <div class="calc-input-wrap has-suffix">
+                    <input type="number" id="calcPrecImposto" value="8" step="0.5" min="0" max="99" oninput="calculatePrecificacaoShopee()">
+                    <span class="suffix">%</span>
+                  </div>
+                </div>
+
+                <!-- Comissão de Vendas % -->
+                <div class="calc-field-group">
+                  <label for="calcPrecComissaoVendas">
+                    <span>🤝 Comissão de vendas</span>
+                  </label>
+                  <div class="calc-input-wrap has-suffix">
+                    <input type="number" id="calcPrecComissaoVendas" value="1" step="0.5" min="0" max="99" oninput="calculatePrecificacaoShopee()">
+                    <span class="suffix">%</span>
+                  </div>
+                </div>
+
+                <!-- Margem Desejada % -->
+                <div class="calc-field-group">
+                  <label for="calcPrecMargemDesejada">
+                    <span>🎯 Margem desejada</span>
+                  </label>
+                  <div class="calc-input-wrap has-suffix">
+                    <input type="number" id="calcPrecMargemDesejada" value="15" step="0.5" min="0.1" max="99" oninput="calculatePrecificacaoShopee()">
+                    <span class="suffix">%</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Caixa de Resultado Destacada Verde -->
+              <div id="calcPrecResultBox" class="calc-result-box">
+                <span class="calc-result-tag">Preço de Venda Sugerido</span>
+                <div id="calcPrecResultMain" class="calc-result-price">💰 R$ --,--</div>
+                <div id="calcPrecMarginBadge" class="calc-result-margin-badge">
+                  <span>✨ Margem real obtida: <strong>--%</strong> (≥ desejada)</span>
+                </div>
+              </div>
+
+              <!-- Resumo Linha por Linha -->
+              <div class="calc-breakdown-card" id="calcPrecBreakdownCard">
+                <div class="calc-breakdown-header">
+                  <span>📊 Detalhamento de Custos e Margem</span>
+                  <span id="calcPrecFaixaBadge" class="shell-badge accent">Faixa Shopee: --</span>
+                </div>
+                <table class="calc-table">
+                  <tbody>
+                    <tr>
+                      <td class="col-desc">Custo do produto</td>
+                      <td class="col-val" id="rowCustoProd">R$ 0,00</td>
+                    </tr>
+                    <tr>
+                      <td class="col-desc">Etiqueta de envio (fixo)</td>
+                      <td class="col-val" id="rowEtiqueta">R$ 0,03</td>
+                    </tr>
+                    <tr>
+                      <td class="col-desc">Panfleto de agradecimento (fixo)</td>
+                      <td class="col-val" id="rowPanfleto">R$ 0,03</td>
+                    </tr>
+                    <tr>
+                      <td class="col-desc" id="rowEmbalagemLabel">Embalagem (Saco M × 1)</td>
+                      <td class="col-val" id="rowEmbalagemVal">R$ 0,07</td>
+                    </tr>
+                    <tr>
+                      <td class="col-desc" id="rowImpostoLabel">Imposto (8,0%)</td>
+                      <td class="col-val" id="rowImpostoVal">R$ 0,00</td>
+                    </tr>
+                    <tr>
+                      <td class="col-desc" id="rowComissaoVendasLabel">Comissão de vendas (1,0%)</td>
+                      <td class="col-val" id="rowComissaoVendasVal">R$ 0,00</td>
+                    </tr>
+                    <tr>
+                      <td class="col-desc" id="rowComissaoShopeeLabel">Comissão Shopee (20,0%)</td>
+                      <td class="col-val" id="rowComissaoShopeeVal">R$ 0,00</td>
+                    </tr>
+                    <tr>
+                      <td class="col-desc">Taxa fixa Shopee</td>
+                      <td class="col-val" id="rowTaxaFixaShopee">R$ 4,50</td>
+                    </tr>
+                    <tr>
+                      <td class="col-desc" id="rowMargemLucroLabel" style="color: var(--color-success); font-weight: 600;">Margem de lucro líquido (real)</td>
+                      <td class="col-val" id="rowMargemLucroVal" style="color: var(--color-success); font-weight: 700;">R$ 0,00</td>
+                    </tr>
+                    <tr class="total-row">
+                      <td class="col-desc"><strong>PREÇO FINAL PARA ANUNCIAR</strong></td>
+                      <td class="col-val" id="rowTotalFinal">R$ 0,00</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Tabelas de Referência Expansíveis -->
+              <details class="calc-ref-details">
+                <summary>📋 Tabelas de referência embutidas (clique para visualizar)</summary>
+                <div class="calc-ref-content">
+                  <div class="ref-tables-grid">
+                    <!-- Custos de Embalagem -->
+                    <div class="ref-table-card">
+                      <div class="ref-table-title">Custos de Embalagem</div>
+                      <table class="ref-mini-table">
+                        <tbody>
+                          <tr><td>Saco PP</td><td>R$ 0,02 / un</td></tr>
+                          <tr><td>Saco P</td><td>R$ 0,03 / un</td></tr>
+                          <tr><td>Saco M</td><td>R$ 0,07 / un</td></tr>
+                          <tr><td>Saco G</td><td>R$ 0,08 / un</td></tr>
+                          <tr><td>Papel Kraft</td><td>R$ 0,72 / metro</td></tr>
+                          <tr><td>Filme Stretch</td><td>R$ 0,26 / metro</td></tr>
+                          <tr><td>Papelão ondulado</td><td>R$ 1,84 / metro</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <!-- Comissões Shopee CNPJ 2026 -->
+                    <div class="ref-table-card">
+                      <div class="ref-table-title">Comissão Shopee CNPJ (desde 01/03/2026)</div>
+                      <table class="ref-mini-table">
+                        <tbody>
+                          <tr><td>Até R$ 79,99</td><td>20% + R$ 4,50</td></tr>
+                          <tr><td>R$ 80,00 a R$ 99,99</td><td>14% + R$ 16,00</td></tr>
+                          <tr><td>R$ 100,00 a R$ 199,99</td><td>14% + R$ 20,00</td></tr>
+                          <tr><td>Acima de R$ 200,00</td><td>14% + R$ 26,00</td></tr>
+                          <tr><td>Etiqueta + Panfleto</td><td>R$ 0,03 + R$ 0,03</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <!-- Nota informativa PIX e Frete -->
+                  <div class="calc-notice-pix">
+                    ℹ️ <strong>Subsídio Pix:</strong> 5% (itens de R$ 80 a R$ 499,99) ou 8% (itens acima de R$ 500) — informativo: o vendedor recebe exatamente o mesmo valor líquido em qualquer modalidade de pagamento. O benefício do frete grátis é subsidiado e oferecido via cupons oficiais da plataforma.
+                  </div>
+                </div>
+              </details>
             </div>
 
           </div>
@@ -2886,7 +3452,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <div class="block-checklist-header">✅ Checklist do bloco</div>
               <ul class="block-checklist-items">
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Montar o anúncio nos 3 grupos (conversão, indexação, fiscal/logística)</span>
                 </li>
               </ul>
@@ -2968,7 +3534,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <div class="block-checklist-header">✅ Checklist do bloco</div>
               <ul class="block-checklist-items">
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Em loja nova, usar Ads para gerar avaliações e dados (não venda imediata)</span>
                 </li>
               </ul>
@@ -3064,7 +3630,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <div class="block-checklist-header">✅ Checklist do bloco</div>
               <ul class="block-checklist-items">
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Testar Shopee Live em 3 blocos com mini-revisão e CTA</span>
                 </li>
               </ul>
@@ -3144,7 +3710,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <div class="block-checklist-header">✅ Checklist do bloco</div>
               <ul class="block-checklist-items">
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Postar vídeos diariamente no Shopee Vídeo</span>
                 </li>
               </ul>
@@ -3234,7 +3800,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <div class="block-checklist-header">✅ Checklist do bloco</div>
               <ul class="block-checklist-items">
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Ativar o Cupom Inteligente (desconto pago pela Shopee)</span>
                 </li>
               </ul>
@@ -3329,7 +3895,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <div class="block-checklist-header">✅ Checklist do bloco</div>
               <ul class="block-checklist-items">
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Abrir Campanha Aberta de afiliados e esperar 30 dias antes de ajustar</span>
                 </li>
               </ul>
@@ -3427,7 +3993,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <div class="block-checklist-header">✅ Checklist do bloco</div>
               <ul class="block-checklist-items">
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Criar kits para subir o ticket médio</span>
                 </li>
               </ul>
@@ -3521,11 +4087,11 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <div class="block-checklist-header">✅ Checklist do bloco</div>
               <ul class="block-checklist-items">
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Zerar devoluções para proteger a visibilidade</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Se preparar com antecedência para datas duplas</span>
                 </li>
               </ul>
@@ -3666,23 +4232,23 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <div class="block-checklist-header">✅ Checklist do bloco</div>
               <ul class="block-checklist-items">
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Mirar o selo de Vendedor Indicado (CNPJ + frete grátis extra + bater as métricas)</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Postar pedidos o mais rápido possível (tempo de preparação)</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Nunca colocar links ou citar outros marketplaces na descrição</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Registrar direito autoral das fotos e vídeos próprios</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Usar marca d'água sem medo (não afeta relevância)</span>
                 </li>
               </ul>
@@ -3803,15 +4369,15 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <div class="block-checklist-header">✅ Checklist do bloco</div>
               <ul class="block-checklist-items">
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Identificar os anúncios com melhor conversão antes de investir em exposição</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Usar fotos 1:1 e 3:4</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Nunca copiar foto de concorrente</span>
                 </li>
               </ul>
@@ -3945,23 +4511,23 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <div class="block-checklist-header">✅ Checklist do bloco</div>
               <ul class="block-checklist-items">
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Ter fornecedores backup</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Responder toda avaliação negativa (contatar, solucionar, pedir reavaliação)</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Praticar preço competitivo na média do mercado</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Aproveitar o polo produtivo da região na escolha de produtos</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Manter pontos de penalidade abaixo de 3</span>
                 </li>
               </ul>
@@ -4172,11 +4738,11 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <div class="block-checklist-header">✅ Checklist do bloco</div>
               <ul class="block-checklist-items">
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Ads automático para pouco tempo, manual para quem tem conhecimento</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Menos é mais na segunda loja</span>
                 </li>
               </ul>
@@ -4262,7 +4828,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <div class="block-checklist-header">✅ Checklist do bloco</div>
               <ul class="block-checklist-items">
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Conferir os novos recursos do Ads antes de criar campanhas (filtros de público, exclusão permanente, múltiplas campanhas por produto)</span>
                 </li>
               </ul>
@@ -4354,15 +4920,15 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <div class="block-checklist-header">✅ Checklist do bloco</div>
               <ul class="block-checklist-items">
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Usar palavras-chave específicas para qualificar o público</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Mínimo 6 imagens no carrossel</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Fazer checklist do anúncio comparando com os concorrentes</span>
                 </li>
               </ul>
@@ -4450,11 +5016,11 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <div class="block-checklist-header">✅ Checklist do bloco</div>
               <ul class="block-checklist-items">
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Nunca pausar campanhas (ajustar orçamento por horário)</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Comparar ROAS de pedidos gerados vs. pagos (SellerBUP)</span>
                 </li>
               </ul>
@@ -4534,11 +5100,11 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <div class="block-checklist-header">✅ Checklist do bloco</div>
               <ul class="block-checklist-items">
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Ordenar variações da mais vendida para a menos vendida</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Desativar produto em vez de excluir</span>
                 </li>
               </ul>
@@ -4649,15 +5215,15 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               <div class="block-checklist-header">✅ Checklist do bloco</div>
               <ul class="block-checklist-items">
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Configurar Principais Escolhas (4 novos + 4 campeões)</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Diagnosticar queda de vendas pelos 2 pilares (visitas e conversão)</span>
                 </li>
                 <li class="block-checklist-item">
-                  <input type="checkbox" checked aria-hidden="true">
+                  <input type="checkbox">
                   <span>Melhorar o CTR antes de aumentar o investimento</span>
                 </li>
               </ul>
@@ -4801,6 +5367,198 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
   </div>
 
   <script>
+    /* ================= CALCULADORA DE PRECIFICAÇÃO SHOPEE ================= */
+    const CUSTOS_EMBALAGEM = {
+      'PP': 0.02,
+      'P': 0.03,
+      'M': 0.07,
+      'G': 0.08,
+      'Kraft': 0.72,
+      'Stretch': 0.26,
+      'Papelao': 1.84
+    };
+
+    const NOMES_EMBALAGEM = {
+      'PP': 'Saco PP',
+      'P': 'Saco P',
+      'M': 'Saco M',
+      'G': 'Saco G',
+      'Kraft': 'Papel Kraft',
+      'Stretch': 'Filme Stretch',
+      'Papelao': 'Papelão'
+    };
+
+    function handleEmbalagemChange() {
+      const tipo = document.getElementById('calcPrecEmbalagemTipo')?.value || 'M';
+      const labelEl = document.getElementById('calcPrecEmbalagemQtdLabel');
+      const inputEl = document.getElementById('calcPrecEmbalagemQtd');
+
+      const isMetros = ['Kraft', 'Stretch', 'Papelao'].includes(tipo);
+      if (labelEl) {
+        labelEl.innerHTML = isMetros ? '<span>📏 Quantidade em METROS (m)</span>' : '<span>📏 Quantidade (unidades)</span>';
+      }
+      if (inputEl && !isMetros && parseFloat(inputEl.value) > 10) {
+        inputEl.value = '1';
+      }
+      calculatePrecificacaoShopee();
+    }
+
+    function getShopeeCommissionTier(precoFinal) {
+      if (precoFinal < 80.00) {
+        return { pct: 0.20, fixa: 4.50, label: 'Até R$ 79,99 (20% + R$ 4,50)' };
+      } else if (precoFinal < 100.00) {
+        return { pct: 0.14, fixa: 16.00, label: 'R$ 80,00 a R$ 99,99 (14% + R$ 16,00)' };
+      } else if (precoFinal < 200.00) {
+        return { pct: 0.14, fixa: 20.00, label: 'R$ 100,00 a R$ 199,99 (14% + R$ 20,00)' };
+      } else {
+        return { pct: 0.14, fixa: 26.00, label: 'Acima de R$ 200,00 (14% + R$ 26,00)' };
+      }
+    }
+
+    function roundPrecoBonito(val) {
+      if (val <= 0) return 0;
+      const inteiro = Math.floor(val);
+      const frac = val - inteiro;
+      // Arredondamento sempre para cima terminando em ,50 ou ,90
+      if (frac <= 0.500001) {
+        return inteiro + 0.50;
+      } else if (frac <= 0.900001) {
+        return inteiro + 0.90;
+      } else {
+        return (inteiro + 1) + 0.50;
+      }
+    }
+
+    function formatBRL(val) {
+      return (val || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function calculatePrecificacaoShopee() {
+      const custoProdInput = document.getElementById('calcPrecCustoProd');
+      const embalagemTipoSelect = document.getElementById('calcPrecEmbalagemTipo');
+      const embalagemQtdInput = document.getElementById('calcPrecEmbalagemQtd');
+      const impostoInput = document.getElementById('calcPrecImposto');
+      const comissaoVendasInput = document.getElementById('calcPrecComissaoVendas');
+      const margemDesejadaInput = document.getElementById('calcPrecMargemDesejada');
+
+      const resultBox = document.getElementById('calcPrecResultBox');
+      const resultMain = document.getElementById('calcPrecResultMain');
+      const marginBadge = document.getElementById('calcPrecMarginBadge');
+      const faixaBadge = document.getElementById('calcPrecFaixaBadge');
+
+      if (!custoProdInput || !resultBox) return;
+
+      const custoProd = parseFloat(custoProdInput.value) || 0;
+      const embalagemTipo = embalagemTipoSelect?.value || 'M';
+      const embalagemQtd = parseFloat(embalagemQtdInput?.value) || 1;
+      const impostoPct = (parseFloat(impostoInput?.value) || 0) / 100;
+      const comissaoVendasPct = (parseFloat(comissaoVendasInput?.value) || 0) / 100;
+      const margemDesejadaPct = (parseFloat(margemDesejadaInput?.value) || 0) / 100;
+
+      const custoEmbalagemUnit = CUSTOS_EMBALAGEM[embalagemTipo] || 0.07;
+      const custoEmbalagemTotal = custoEmbalagemUnit * embalagemQtd;
+      const etiquetaFixo = 0.03;
+      const panfletoFixo = 0.03;
+
+      const custosFixos = custoProd + etiquetaFixo + panfletoFixo + custoEmbalagemTotal;
+
+      if (custoProd <= 0) {
+        resultBox.classList.add('error');
+        resultMain.textContent = '⚠️ Informe o custo do produto';
+        marginBadge.style.display = 'none';
+        return;
+      }
+
+      // Validação de percentuais básicos
+      if ((impostoPct + comissaoVendasPct + margemDesejadaPct) >= 0.85) {
+        resultBox.classList.add('error');
+        resultMain.textContent = '⚠️ Percentuais somam 85% ou mais — reduza a margem ou os impostos';
+        marginBadge.style.display = 'none';
+        return;
+      }
+
+      // Cálculo iterativo para determinar a faixa de comissão estável
+      let tier = getShopeeCommissionTier(custosFixos * 2.2);
+      let precoBase = 0;
+      let erroPercentuais = false;
+
+      for (let iter = 0; iter < 12; iter++) {
+        const divisor = 1 - impostoPct - comissaoVendasPct - tier.pct - margemDesejadaPct;
+        if (divisor <= 0.001) {
+          erroPercentuais = true;
+          break;
+        }
+        precoBase = (custosFixos + tier.fixa) / divisor;
+        const candidateFinal = roundPrecoBonito(precoBase);
+        const nextTier = getShopeeCommissionTier(candidateFinal);
+        if (nextTier.pct === tier.pct && nextTier.fixa === tier.fixa) {
+          tier = nextTier;
+          break;
+        }
+        tier = nextTier;
+      }
+
+      if (erroPercentuais || precoBase <= 0) {
+        resultBox.classList.add('error');
+        resultMain.textContent = '⚠️ Percentuais somam 100% ou mais — reduza a margem ou os percentuais';
+        marginBadge.style.display = 'none';
+        return;
+      }
+
+      // Arredondamento comercial para cima (,50 ou ,90)
+      const precoFinal = roundPrecoBonito(precoBase);
+      const finalTier = getShopeeCommissionTier(precoFinal);
+
+      // Valores em R$ calculados sobre o preço final
+      const valorImposto = precoFinal * impostoPct;
+      const valorComissaoVendas = precoFinal * comissaoVendasPct;
+      const valorComissaoShopee = precoFinal * finalTier.pct;
+      const valorTaxaFixaShopee = finalTier.fixa;
+
+      const todosCustosETaxas = custosFixos + valorImposto + valorComissaoVendas + valorComissaoShopee + valorTaxaFixaShopee;
+      const margemLucroRealReais = precoFinal - todosCustosETaxas;
+      const margemRealPct = (margemLucroRealReais / precoFinal) * 100;
+
+      // Atualiza caixa verde
+      resultBox.classList.remove('error');
+      resultMain.textContent = `💰 Preço final: ${formatBRL(precoFinal)}`;
+      marginBadge.style.display = 'inline-flex';
+      marginBadge.innerHTML = `<span>✨ Margem real obtida: <strong>${margemRealPct.toFixed(1).replace('.', ',')}% (${formatBRL(margemLucroRealReais)})</strong> (meta: ${(margemDesejadaPct * 100).toFixed(1).replace('.', ',')}%)</span>`;
+
+      // Atualiza tabela linha a linha
+      if (faixaBadge) faixaBadge.textContent = finalTier.label;
+
+      const setTxt = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+      };
+
+      setTxt('rowCustoProd', formatBRL(custoProd));
+      setTxt('rowEtiqueta', formatBRL(etiquetaFixo));
+      setTxt('rowPanfleto', formatBRL(panfletoFixo));
+
+      const isMetros = ['Kraft', 'Stretch', 'Papelao'].includes(embalagemTipo);
+      const unidadeDesc = isMetros ? `${embalagemQtd}m` : `${embalagemQtd} un`;
+      setTxt('rowEmbalagemLabel', `Embalagem (${NOMES_EMBALAGEM[embalagemTipo]} × ${unidadeDesc})`);
+      setTxt('rowEmbalagemVal', formatBRL(custoEmbalagemTotal));
+
+      setTxt('rowImpostoLabel', `Imposto (${(impostoPct * 100).toFixed(1).replace('.', ',')}%)`);
+      setTxt('rowImpostoVal', formatBRL(valorImposto));
+
+      setTxt('rowComissaoVendasLabel', `Comissão de vendas (${(comissaoVendasPct * 100).toFixed(1).replace('.', ',')}%)`);
+      setTxt('rowComissaoVendasVal', formatBRL(valorComissaoVendas));
+
+      setTxt('rowComissaoShopeeLabel', `Comissão Shopee (${(finalTier.pct * 100).toFixed(0)}%)`);
+      setTxt('rowComissaoShopeeVal', formatBRL(valorComissaoShopee));
+
+      setTxt('rowTaxaFixaShopee', formatBRL(valorTaxaFixaShopee));
+
+      setTxt('rowMargemLucroLabel', `Margem de lucro (${margemRealPct.toFixed(1).replace('.', ',')}%)`);
+      setTxt('rowMargemLucroVal', formatBRL(margemLucroRealReais));
+
+      setTxt('rowTotalFinal', formatBRL(precoFinal));
+    }
+
     /* ================= CALCULADORA DE ROAS DO BLOCO 2 ================= */
     function calculateRoasBlock2() {
       const precoInput = document.getElementById('roasB2Preco');
@@ -4855,8 +5613,14 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       // Calculate ROAS for block 2 on load
       calculateRoasBlock2();
 
+      // Calculate Precificação Shopee on load
+      calculatePrecificacaoShopee();
+
       // Course progress persistence
       loadCourseProgress();
+
+      // Block checklists initialization
+      initAllBlockChecklists();
 
       // Initialize search inputs and sync
       setupSearchInputs();
@@ -4937,6 +5701,139 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           }
         });
       });
+    }
+
+    /* ================= CHECKLISTS DOS BLOCOS & SINCRONIZAÇÃO ================= */
+    function getChecklistStorageKey(blockId) {
+      return `shopee-estudo-checklist-${blockId}`;
+    }
+
+    function getLocalChecklistState(blockId) {
+      try {
+        const raw = localStorage.getItem(getChecklistStorageKey(blockId));
+        return raw ? JSON.parse(raw) : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function initAllBlockChecklists() {
+      COURSE_BLOCKS.forEach(blockId => {
+        const blockEl = document.getElementById(blockId);
+        if (!blockEl) return;
+        const box = blockEl.querySelector('.block-checklist-box');
+        if (!box) return;
+        const items = box.querySelectorAll('.block-checklist-item');
+        if (!items || items.length === 0) return;
+
+        // Ensure badge exists in block-header-actions
+        const headerActions = blockEl.querySelector('.block-header-actions');
+        let badge = blockEl.querySelector('.block-checklist-badge');
+        if (!badge && headerActions) {
+          badge = document.createElement('span');
+          badge.className = 'block-checklist-badge';
+          badge.id = `badge-checklist-${blockId}`;
+          badge.title = 'Itens concluídos do checklist';
+          const completeBtn = headerActions.querySelector('.block-complete-btn');
+          if (completeBtn && completeBtn.nextSibling) {
+            headerActions.insertBefore(badge, completeBtn.nextSibling);
+          } else {
+            headerActions.appendChild(badge);
+          }
+        }
+
+        const state = getLocalChecklistState(blockId);
+        let checkedCount = 0;
+
+        items.forEach((item, idx) => {
+          const chk = item.querySelector('input[type="checkbox"]');
+          if (!chk) return;
+
+          const isChecked = state[String(idx)] === true;
+          chk.checked = isChecked;
+          item.classList.toggle('checked', isChecked);
+          if (isChecked) checkedCount++;
+
+          // Attach listeners once
+          if (!item.dataset.bound) {
+            item.dataset.bound = 'true';
+            chk.addEventListener('change', (e) => {
+              e.stopPropagation();
+              handleChecklistToggle(blockId, idx, chk.checked);
+            });
+            item.addEventListener('click', (e) => {
+              if (e.target !== chk) {
+                chk.checked = !chk.checked;
+                handleChecklistToggle(blockId, idx, chk.checked);
+              }
+            });
+          }
+        });
+
+        updateBlockChecklistBadge(blockId, checkedCount, items.length);
+      });
+    }
+
+    function updateBlockChecklistBadge(blockId, checkedCount, totalCount) {
+      const badge = document.getElementById(`badge-checklist-${blockId}`);
+      if (!badge) return;
+      badge.textContent = `✓ ${checkedCount}/${totalCount}`;
+      badge.classList.toggle('all-checked', checkedCount === totalCount && totalCount > 0);
+      badge.classList.toggle('has-checked', checkedCount > 0 && checkedCount < totalCount);
+    }
+
+    async function handleChecklistToggle(blockId, itemIdx, isChecked) {
+      const state = getLocalChecklistState(blockId);
+      state[String(itemIdx)] = !!isChecked;
+
+      try {
+        localStorage.setItem(getChecklistStorageKey(blockId), JSON.stringify(state));
+      } catch (e) {}
+
+      // Update item visual state
+      const blockEl = document.getElementById(blockId);
+      if (blockEl) {
+        const items = blockEl.querySelectorAll('.block-checklist-item');
+        if (items[itemIdx]) {
+          items[itemIdx].classList.toggle('checked', !!isChecked);
+          const chk = items[itemIdx].querySelector('input[type="checkbox"]');
+          if (chk) chk.checked = !!isChecked;
+        }
+
+        // Recalculate badge
+        let count = 0;
+        items.forEach((it, i) => {
+          if (state[String(i)] === true) count++;
+        });
+        updateBlockChecklistBadge(blockId, count, items.length);
+      }
+
+      // Sync with Firestore if user is authenticated
+      if (currentUser && isFirebaseReady && firestoreDb) {
+        try {
+          const docRef = firestoreDb.collection('anotacoes').doc(currentUser.uid);
+          await docRef.set({
+            checklists: {
+              [blockId]: state
+            },
+            atualizadoEm: window.firebase.firestore.FieldValue.serverTimestamp()
+          }, { merge: true });
+        } catch (err) {
+          console.warn('Erro ao sincronizar checklist no Firestore:', err);
+        }
+      }
+    }
+
+    function syncChecklistsFromCloud(cloudChecklists) {
+      if (!cloudChecklists || typeof cloudChecklists !== 'object') return;
+      COURSE_BLOCKS.forEach(blockId => {
+        if (cloudChecklists[blockId] && typeof cloudChecklists[blockId] === 'object') {
+          try {
+            localStorage.setItem(getChecklistStorageKey(blockId), JSON.stringify(cloudChecklists[blockId]));
+          } catch (e) {}
+        }
+      });
+      initAllBlockChecklists();
     }
 
     /* ================= BARRA DE PROGRESSO DO CURSO (19 BLOCOS) ================= */
@@ -5389,6 +6286,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     const blockTitlesMap = {
       'bloco-1': 'Bloco 1: Zero Visitas & Indexação',
       'bloco-2': 'Bloco 2: Shopee Ads & ROAS',
+      'calc-precificacao': '🧮 Calculadora de Precificação',
       'bloco-3': 'Bloco 3: Hierarquia do Anúncio',
       'bloco-4': 'Bloco 4: Loja Nova & GMV Max',
       'bloco-5': 'Bloco 5: Shopee Live',
@@ -5518,6 +6416,28 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               localStorage.setItem(COURSE_STORAGE_KEY, JSON.stringify(courseProgressState));
             } catch (e) {}
             applyCourseProgressUI();
+          }
+          // Load Checklists from Firestore
+          if (data && data.checklists && typeof data.checklists === 'object') {
+            syncChecklistsFromCloud(data.checklists);
+          } else {
+            // Se nuvem ainda não tem checklists, migra os locais
+            const localChecklists = {};
+            let hasLocal = false;
+            COURSE_BLOCKS.forEach(bId => {
+              const raw = localStorage.getItem(getChecklistStorageKey(bId));
+              if (raw) {
+                try {
+                  localChecklists[bId] = JSON.parse(raw);
+                  hasLocal = true;
+                } catch (e) {}
+              }
+            });
+            if (hasLocal) {
+              await docRef.set({
+                checklists: localChecklists
+              }, { merge: true });
+            }
           }
         }
 
