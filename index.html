@@ -155,11 +155,12 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     /* Layout structure */
     .app-layout {
       display: grid;
-      grid-template-columns: 260px 1fr;
+      grid-template-columns: 280px 1fr;
       gap: 2rem;
       max-width: 1400px;
       margin: 0 auto;
       padding: 2rem 1rem;
+      align-items: start;
     }
 
     @media (max-width: 900px) {
@@ -168,19 +169,45 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       }
       .sidebar-nav {
         position: static !important;
+        width: auto !important;
+        max-height: 50vh !important;
+        overflow-y: auto !important;
         margin-bottom: 1.5rem;
       }
     }
 
-    /* Sticky Sidebar Nav */
+    /* Sticky Sidebar Nav with its own scroll */
     .sidebar-nav {
       position: sticky;
       top: 1.5rem;
-      height: fit-content;
+      width: 280px;
+      max-height: 80vh;
+      overflow-y: auto;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 1.25rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+      box-sizing: border-box;
+    }
+
+    .sidebar-nav::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .sidebar-nav::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 999px;
+    }
+
+    .sidebar-nav::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 999px;
+    }
+
+    .sidebar-nav::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
     }
 
     .sidebar-title {
@@ -803,80 +830,199 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       margin-top: 1.25rem;
     }
 
-    /* Interactive Checklist Section */
-    .checklist-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
+    /* Checklist do Bloco (Distribuído por Bloco) */
+    .block-checklist-box {
+      margin-top: 1.5rem;
+      background: rgba(16, 185, 129, 0.04);
+      border: 1px solid rgba(16, 185, 129, 0.28);
       border-radius: var(--radius);
-      padding: 1.5rem;
+      padding: 1.15rem 1.25rem;
     }
 
-    .progress-bar-bg {
-      width: 100%;
-      height: 8px;
-      background: var(--border);
-      border-radius: 999px;
-      overflow: hidden;
-      margin: 0.75rem 0 1.5rem 0;
+    .block-checklist-header {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--color-success);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.85rem;
     }
 
-    .progress-bar-fill {
-      height: 100%;
-      background: var(--accent);
-      width: 0%;
-      transition: width 0.3s ease;
-    }
-
-    .checklist-items {
+    .block-checklist-items {
+      list-style: none;
+      padding: 0;
+      margin: 0;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.6rem;
     }
 
-    .checklist-item {
+    .block-checklist-item {
       display: flex;
       align-items: flex-start;
-      gap: 0.75rem;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--border);
-      padding: 0.85rem 1rem;
-      border-radius: calc(var(--radius) - 2px);
-      cursor: pointer;
-      transition: background 0.2s ease, border-color 0.2s ease;
-      user-select: none;
-    }
-
-    .checklist-item:hover {
-      background: var(--surface-hover);
-    }
-
-    .checklist-item.checked {
-      opacity: 0.65;
-      text-decoration: line-through;
-      border-color: rgba(255, 255, 255, 0.05);
-    }
-
-    .checklist-checkbox {
-      margin-top: 0.2rem;
-      accent-color: var(--accent);
-      width: 18px;
-      height: 18px;
-      cursor: pointer;
-    }
-
-    .checklist-text {
-      font-size: 0.925rem;
+      gap: 0.65rem;
+      font-size: 0.875rem;
       color: var(--text);
+      line-height: 1.45;
     }
 
-    .checklist-tag {
-      font-size: 0.7rem;
-      padding: 0.1rem 0.4rem;
+    .block-checklist-item input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 17px;
+      height: 17px;
+      margin-top: 0.15rem;
+      border: 1.5px solid var(--color-success);
       border-radius: 4px;
-      background: var(--surface-hover);
-      color: var(--text-muted);
-      margin-left: auto;
+      background: rgba(16, 185, 129, 0.15);
+      position: relative;
+      cursor: default;
       flex-shrink: 0;
+      pointer-events: none;
+    }
+
+    .block-checklist-item input[type="checkbox"]:checked::after {
+      content: "✔";
+      position: absolute;
+      left: 2px;
+      top: -1px;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--color-success);
+    }
+
+    /* Embedded Bloco 2 ROAS Calculator */
+    .roas-calc-container {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin-top: 1.5rem;
+    }
+
+    .roas-calc-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .roas-calc-desc {
+      font-size: 0.825rem;
+      color: var(--text-muted);
+      margin-bottom: 1.15rem;
+    }
+
+    .roas-calc-inputs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .roas-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .roas-input-group label {
+      font-size: 0.775rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .roas-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .roas-input-wrap span.prefix {
+      position: absolute;
+      left: 0.75rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .roas-input-wrap input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.55rem 0.65rem 0.55rem 2.2rem;
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 600;
+      font-family: inherit;
+      box-sizing: border-box;
+      transition: border-color 0.2s;
+    }
+
+    .roas-input-wrap input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .roas-result-card {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      border-radius: 10px;
+      padding: 1.15rem 1.25rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      transition: all 0.25s ease;
+    }
+
+    .roas-result-card.negative {
+      background: var(--color-danger-bg);
+      border-color: rgba(239, 68, 68, 0.4);
+    }
+
+    .roas-result-main {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--color-success);
+      margin-bottom: 0.35rem;
+    }
+
+    .roas-result-card.negative .roas-result-main {
+      color: var(--color-danger);
+    }
+
+    .roas-interpretation {
+      font-size: 0.825rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .roas-targets-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      font-size: 0.825rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .roas-targets-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
 
     /* Block Header Actions (Notes + Completion) */
@@ -2172,27 +2318,14 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               19. Escala, CTR & Principais Escolhas
             </a>
           </li>
-          <li class="nav-item">
-            <a href="#calculadora-roas">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>
-              Calculadora ROAS
-              <span class="nav-badge">Tool</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#checklist">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-              Checklist Rápido
-            </a>
-          </li>
         </ul>
 
         <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border);">
           <div class="sidebar-title">Status do Caderno</div>
           <div style="font-size: 0.8rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.5rem;">
             <div>📌 19 Blocos de Estudo</div>
-            <div>⚡ Ferramentas Ativas</div>
-            <div id="nav-checklist-status">☑️ 0/37 Checklist concluído</div>
+            <div>⚡ Calculadora ROAS (Bloco 2)</div>
+            <div id="nav-checklist-status">☑️ 0 de 19 concluídos</div>
           </div>
         </div>
       </aside>
@@ -2205,7 +2338,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           <div class="course-progress-header">
             <div class="course-progress-title">
               <span>📊 Progresso do curso:</span>
-              <span class="course-progress-count" id="courseProgressCount">0 de 20 concluídos (0%)</span>
+              <span class="course-progress-count" id="courseProgressCount">0 de 19 concluídos (0%)</span>
             </div>
             <div class="course-progress-actions">
               <button type="button" class="btn-reset-progress" onclick="resetCourseProgress()" title="Zerar todas as marcações de conclusão">
@@ -2359,6 +2492,33 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
                 <li class="action-item">
                   <span class="action-dot"></span>
                   <div><strong>Aprimorar Imagem Principal:</strong> Fotografar sob luz natural/suave, aplicar fundo branco limpo e remover qualquer poluição visual.</div>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Checklist do Bloco 1 -->
+            <div class="block-checklist-box">
+              <div class="block-checklist-header">✅ Checklist do bloco</div>
+              <ul class="block-checklist-items">
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Revisar o título pensando como o cliente</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Preencher todos os atributos</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Analisar preços da concorrência (ficar na média ou ligeiramente abaixo)</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Usar ShopAds só em produtos que já têm visitas, cliques e carrinhos</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Trocar a imagem principal se necessário (luz natural, fundo branco, sem distrações)</span>
                 </li>
               </ul>
             </div>
@@ -2518,89 +2678,113 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               🗺️ <strong>Nota de Alerta da Comunidade:</strong> A Shopee atualizou o sistema de Ads com a ferramenta de proteção/exclusão geográfica ("proteção de ruas/regiões"). Muitos vendedores relataram queda de performance e flutuação atípica no algoritmo após essa atualização. Acompanhar métricas de impressões diariamente!
             </div>
 
-          </div>
-        </section>
-
-        <!-- ================= CALCULADORA ROAS INTERATIVA ================= -->
-        <section id="calculadora-roas" class="study-block shell-fade">
-          <div class="block-header" onclick="handleBlockHeaderClick('calculadora-roas')">
-            <div class="block-header-left">
-              <div class="block-tag">
-                Ferramenta Prática
-                <span class="source-badge">• Baseada na fórmula de Margem de Contribuição</span>
+            <!-- Calculadora de ROAS Mínimo no Bloco 2 -->
+            <div class="roas-calc-container" id="calc-roas-b2">
+              <div class="roas-calc-title">🧮 Calculadora de ROAS mínimo</div>
+              <div class="roas-calc-desc">
+                Digite seus valores reais ou simule para descobrir instantaneamente a margem de contribuição e o ROAS mínimo de sobrevivência:
               </div>
-              <h2 class="block-title">Calculadora de ROAS Mínimo & Metas de Campanha</h2>
+
+              <div class="roas-calc-inputs">
+                <div class="roas-input-group">
+                  <label for="roasB2Preco">Preço de venda</label>
+                  <div class="roas-input-wrap">
+                    <span class="prefix">R$</span>
+                    <input type="number" id="roasB2Preco" value="39.00" step="0.5" min="0.01" oninput="calculateRoasBlock2()">
+                  </div>
+                </div>
+
+                <div class="roas-input-group">
+                  <label for="roasB2Mercadoria">Mercadoria (custo do produto)</label>
+                  <div class="roas-input-wrap">
+                    <span class="prefix">R$</span>
+                    <input type="number" id="roasB2Mercadoria" value="20.00" step="0.5" min="0" oninput="calculateRoasBlock2()">
+                  </div>
+                </div>
+
+                <div class="roas-input-group">
+                  <label for="roasB2Comissao">Comissão Shopee</label>
+                  <div class="roas-input-wrap">
+                    <span class="prefix">R$</span>
+                    <input type="number" id="roasB2Comissao" value="5.00" step="0.5" min="0" oninput="calculateRoasBlock2()">
+                  </div>
+                </div>
+
+                <div class="roas-input-group">
+                  <label for="roasB2Impostos">Impostos</label>
+                  <div class="roas-input-wrap">
+                    <span class="prefix">R$</span>
+                    <input type="number" id="roasB2Impostos" value="3.00" step="0.5" min="0" oninput="calculateRoasBlock2()">
+                  </div>
+                </div>
+
+                <div class="roas-input-group">
+                  <label for="roasB2Embalagem">Embalagem</label>
+                  <div class="roas-input-wrap">
+                    <span class="prefix">R$</span>
+                    <input type="number" id="roasB2Embalagem" value="2.00" step="0.5" min="0" oninput="calculateRoasBlock2()">
+                  </div>
+                </div>
+
+                <div class="roas-input-group">
+                  <label for="roasB2Outros">Outros custos (opcional)</label>
+                  <div class="roas-input-wrap">
+                    <span class="prefix">R$</span>
+                    <input type="number" id="roasB2Outros" value="0.00" step="0.5" min="0" oninput="calculateRoasBlock2()">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Resultado Destacado -->
+              <div id="roasResultCard" class="roas-result-card">
+                <div id="roasResultMain" class="roas-result-main">ROAS mínimo (empate): 4,33</div>
+                <div style="font-size: 0.85rem; color: var(--text); margin-bottom: 0.45rem;">
+                  Margem de contribuição: <strong id="roasMargemTxt" style="color: var(--color-success)">R$ 9,00</strong>
+                </div>
+                <div id="roasInterpretationTxt" class="roas-interpretation">
+                  <span style="color: var(--color-danger);">Abaixo disso = prejuízo</span>
+                  <span style="color: var(--text-muted);">|</span>
+                  <span style="color: var(--color-warning);">Igual = empate</span>
+                  <span style="color: var(--text-muted);">|</span>
+                  <span style="color: var(--color-success);">Acima = lucro</span>
+                </div>
+              </div>
+
+              <!-- Sugestões de ROAS-alvo -->
+              <div class="roas-targets-box">
+                <div class="roas-targets-row">
+                  <span>🎯 <strong>Sugestão Rentabilidade:</strong> 14–17</span>
+                  <span class="shell-badge green">Foco em Margem</span>
+                </div>
+                <div class="roas-targets-row">
+                  <span>🚀 <strong>Sugestão Escala:</strong> 10–11</span>
+                  <span class="shell-badge blue">Foco em Volume</span>
+                </div>
+                <div style="font-size: 0.775rem; color: var(--color-warning); margin-top: 0.2rem;">
+                  ⚠️ <em>Aviso importante:</em> O ROAS configurado no Ads nunca deve ficar abaixo do mínimo calculado.
+                </div>
+              </div>
             </div>
-            <div class="toggle-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+
+            <!-- Checklist do Bloco 2 -->
+            <div class="block-checklist-box">
+              <div class="block-checklist-header">✅ Checklist do bloco</div>
+              <ul class="block-checklist-items">
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Calcular o ROAS mínimo antes de anunciar</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Separar grupos por estratégia (nunca misturar rentabilidade com escala)</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Rodar pelo menos 7 dias antes de julgar o resultado</span>
+                </li>
+              </ul>
             </div>
-          </div>
 
-          <div class="block-content">
-            <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0;">
-              Simule a viabilidade dos seus anúncios inserindo o Preço de Venda e os Custos Totais para calcular a Margem de Contribuição e o ROAS Mínimo (Linha Vermelha).
-            </p>
-
-            <div class="calc-box">
-              <div class="calc-grid">
-                
-                <div class="form-group">
-                  <label for="inputPreco">Preço de Venda (R$)</label>
-                  <input type="number" id="inputPreco" class="form-input" value="39.00" step="0.5" min="1" />
-                </div>
-
-                <div class="form-group">
-                  <label for="inputCusto">Custo Fornecedor/Produto (R$)</label>
-                  <input type="number" id="inputCusto" class="form-input" value="18.00" step="0.5" min="0" />
-                </div>
-
-                <div class="form-group">
-                  <label for="inputComissao">Comissão + Taxa Shopee (%)</label>
-                  <input type="number" id="inputComissao" class="form-input" value="20.0" step="0.5" min="0" max="100" />
-                </div>
-
-                <div class="form-group">
-                  <label for="inputOutros">Impostos, Embalagem & Outros (R$)</label>
-                  <input type="number" id="inputOutros" class="form-input" value="8.20" step="0.5" min="0" />
-                </div>
-
-              </div>
-
-              <!-- Result Stats Grid -->
-              <div class="calc-results">
-                
-                <div class="calc-stat">
-                  <div class="calc-stat-lbl">Margem em R$</div>
-                  <div id="resMargemReais" class="calc-stat-val" style="color: var(--color-success)">R$ 5,00</div>
-                </div>
-
-                <div class="calc-stat">
-                  <div class="calc-stat-lbl">Margem em %</div>
-                  <div id="resMargemPct" class="calc-stat-val" style="color: var(--color-success)">12,8%</div>
-                </div>
-
-                <div class="calc-stat" style="border: 1px solid rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.08);">
-                  <div class="calc-stat-lbl" style="color: #fca5a5; font-weight: 700;">ROAS MÍNIMO (LINHA VERMELHA)</div>
-                  <div id="resRoasMinimo" class="calc-stat-val" style="color: var(--color-danger)">7.80</div>
-                </div>
-
-                <div class="calc-stat">
-                  <div class="calc-stat-lbl">Target Escala (ROAS)</div>
-                  <div id="resTargetEscala" class="calc-stat-val" style="color: var(--color-info)">10.0 - 11.0</div>
-                </div>
-
-                <div class="calc-stat">
-                  <div class="calc-stat-lbl">Target Rentabilidade (ROAS)</div>
-                  <div id="resTargetRent" class="calc-stat-val" style="color: var(--color-success)">14.0 - 17.0</div>
-                </div>
-
-              </div>
-
-              <div id="calcVerdict" class="note-box" style="margin-top: 1rem; text-align: center;">
-                ✅ <strong>Diagnóstico da Margem:</strong> Margem de contribuição positiva. Mantenha os anúncios com ROAS superior a <span id="verdictRoas">7.80</span> para lucrar.
-              </div>
-
-            </div>
           </div>
         </section>
 
@@ -2696,6 +2880,18 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               </div>
 
             </div>
+
+            <!-- Checklist do Bloco 3 -->
+            <div class="block-checklist-box">
+              <div class="block-checklist-header">✅ Checklist do bloco</div>
+              <ul class="block-checklist-items">
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Montar o anúncio nos 3 grupos (conversão, indexação, fiscal/logística)</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
         </section>
 
@@ -2766,6 +2962,18 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
                 </div>
               </div>
             </div>
+
+            <!-- Checklist do Bloco 4 -->
+            <div class="block-checklist-box">
+              <div class="block-checklist-header">✅ Checklist do bloco</div>
+              <ul class="block-checklist-items">
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Em loja nova, usar Ads para gerar avaliações e dados (não venda imediata)</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
         </section>
 
@@ -2850,6 +3058,18 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               </div>
 
             </div>
+
+            <!-- Checklist do Bloco 5 -->
+            <div class="block-checklist-box">
+              <div class="block-checklist-header">✅ Checklist do bloco</div>
+              <ul class="block-checklist-items">
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Testar Shopee Live em 3 blocos com mini-revisão e CTA</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
         </section>
 
@@ -2918,6 +3138,18 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               </div>
 
             </div>
+
+            <!-- Checklist do Bloco 6 -->
+            <div class="block-checklist-box">
+              <div class="block-checklist-header">✅ Checklist do bloco</div>
+              <ul class="block-checklist-items">
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Postar vídeos diariamente no Shopee Vídeo</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
         </section>
 
@@ -2996,6 +3228,18 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               </div>
 
             </div>
+
+            <!-- Checklist do Bloco 7 -->
+            <div class="block-checklist-box">
+              <div class="block-checklist-header">✅ Checklist do bloco</div>
+              <ul class="block-checklist-items">
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Ativar o Cupom Inteligente (desconto pago pela Shopee)</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
         </section>
 
@@ -3079,6 +3323,18 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
                 A estratégia antiga (2020 a 2023) de apenas cadastrar o anúncio na plataforma e esperar a venda cair organicamente está oficialmente <strong>morta</strong>.
               </p>
             </div>
+
+            <!-- Checklist do Bloco 8 -->
+            <div class="block-checklist-box">
+              <div class="block-checklist-header">✅ Checklist do bloco</div>
+              <ul class="block-checklist-items">
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Abrir Campanha Aberta de afiliados e esperar 30 dias antes de ajustar</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
         </section>
 
@@ -3165,6 +3421,18 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               </div>
 
             </div>
+
+            <!-- Checklist do Bloco 9 -->
+            <div class="block-checklist-box">
+              <div class="block-checklist-header">✅ Checklist do bloco</div>
+              <ul class="block-checklist-items">
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Criar kits para subir o ticket médio</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
         </section>
 
@@ -3247,6 +3515,22 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               </div>
 
             </div>
+
+            <!-- Checklist do Bloco 10 -->
+            <div class="block-checklist-box">
+              <div class="block-checklist-header">✅ Checklist do bloco</div>
+              <ul class="block-checklist-items">
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Zerar devoluções para proteger a visibilidade</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Se preparar com antecedência para datas duplas</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
         </section>
 
@@ -3377,6 +3661,33 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               </div>
             </div>
 
+            <!-- Checklist do Bloco 11 -->
+            <div class="block-checklist-box">
+              <div class="block-checklist-header">✅ Checklist do bloco</div>
+              <ul class="block-checklist-items">
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Mirar o selo de Vendedor Indicado (CNPJ + frete grátis extra + bater as métricas)</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Postar pedidos o mais rápido possível (tempo de preparação)</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Nunca colocar links ou citar outros marketplaces na descrição</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Registrar direito autoral das fotos e vídeos próprios</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Usar marca d'água sem medo (não afeta relevância)</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
         </section>
 
@@ -3486,6 +3797,26 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               </div>
 
             </div>
+
+            <!-- Checklist do Bloco 12 -->
+            <div class="block-checklist-box">
+              <div class="block-checklist-header">✅ Checklist do bloco</div>
+              <ul class="block-checklist-items">
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Identificar os anúncios com melhor conversão antes de investir em exposição</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Usar fotos 1:1 e 3:4</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Nunca copiar foto de concorrente</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
         </section>
 
@@ -3608,6 +3939,34 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               </div>
 
             </div>
+
+            <!-- Checklist do Bloco 13 -->
+            <div class="block-checklist-box">
+              <div class="block-checklist-header">✅ Checklist do bloco</div>
+              <ul class="block-checklist-items">
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Ter fornecedores backup</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Responder toda avaliação negativa (contatar, solucionar, pedir reavaliação)</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Praticar preço competitivo na média do mercado</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Aproveitar o polo produtivo da região na escolha de produtos</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Manter pontos de penalidade abaixo de 3</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
         </section>
 
@@ -3807,6 +4166,22 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               </div>
 
             </div>
+
+            <!-- Checklist do Bloco 14 -->
+            <div class="block-checklist-box">
+              <div class="block-checklist-header">✅ Checklist do bloco</div>
+              <ul class="block-checklist-items">
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Ads automático para pouco tempo, manual para quem tem conhecimento</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Menos é mais na segunda loja</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
         </section>
 
@@ -3881,6 +4256,18 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
                 </div>
               </div>
             </div>
+
+            <!-- Checklist do Bloco 15 -->
+            <div class="block-checklist-box">
+              <div class="block-checklist-header">✅ Checklist do bloco</div>
+              <ul class="block-checklist-items">
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Conferir os novos recursos do Ads antes de criar campanhas (filtros de público, exclusão permanente, múltiplas campanhas por produto)</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
         </section>
 
@@ -3961,6 +4348,26 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
                 • <strong>Regra de Ouro:</strong> Poucas vendas com muitos cliques = problema do anúncio, nunca do Ads. Compare sua página item por item com os 3 maiores concorrentes.
               </div>
             </div>
+
+            <!-- Checklist do Bloco 16 -->
+            <div class="block-checklist-box">
+              <div class="block-checklist-header">✅ Checklist do bloco</div>
+              <ul class="block-checklist-items">
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Usar palavras-chave específicas para qualificar o público</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Mínimo 6 imagens no carrossel</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Fazer checklist do anúncio comparando com os concorrentes</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
         </section>
 
@@ -4037,6 +4444,22 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
                 </div>
               </div>
             </div>
+
+            <!-- Checklist do Bloco 17 -->
+            <div class="block-checklist-box">
+              <div class="block-checklist-header">✅ Checklist do bloco</div>
+              <ul class="block-checklist-items">
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Nunca pausar campanhas (ajustar orçamento por horário)</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Comparar ROAS de pedidos gerados vs. pagos (SellerBUP)</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
         </section>
 
@@ -4105,6 +4528,22 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
                 </div>
               </div>
             </div>
+
+            <!-- Checklist do Bloco 18 -->
+            <div class="block-checklist-box">
+              <div class="block-checklist-header">✅ Checklist do bloco</div>
+              <ul class="block-checklist-items">
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Ordenar variações da mais vendida para a menos vendida</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Desativar produto em vez de excluir</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
         </section>
 
@@ -4204,280 +4643,26 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
                 </div>
               </div>
             </div>
-          </div>
-        </section>
 
-        <!-- ================= CHECKLIST RÁPIDO ================= -->
-        <section id="checklist" class="study-block shell-fade">
-          <div class="block-header" onclick="handleBlockHeaderClick('checklist')">
-            <div class="block-header-left">
-              <div class="block-tag">
-                Plano de Ação Integrado
-                <span class="source-badge">• Salvo no navegador (localStorage)</span>
-              </div>
-              <h2 class="block-title">Checklist Rápido de Execução na Shopee</h2>
-            </div>
-            <div class="block-header-actions" onclick="event.stopPropagation()">
-              <label class="block-complete-btn" id="lbl-complete-checklist" title="Marcar checklist como concluído">
-                <input type="checkbox" class="block-complete-chk" id="chk-complete-checklist" data-block-id="checklist" onchange="toggleBlockCompletion('checklist', this.checked)">
-                <span>✅ Concluído</span>
-              </label>
-              <button type="button" class="btn-notes-toggle" id="btn-notes-checklist" onclick="toggleNotes(event, 'checklist')">
-                📝 Anotações <span class="notes-dot" id="dot-checklist">●</span>
-              </button>
-            </div>
-            <div class="toggle-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </div>
-          </div>
-
-          <div class="block-content">
-            <div class="block-notes-area" id="notes-area-checklist" style="display: none;">
-              <div class="block-notes-toolbar">
-                <span class="block-notes-title">📝 Anotações — Checklist Rápido</span>
-                <span class="block-notes-saved" id="status-notes-checklist">✓ Salvo</span>
-              </div>
-              <textarea id="note-input-checklist" class="block-notes-input" placeholder="Escreva suas anotações sobre este bloco..." oninput="handleNoteTyping('checklist', this.value)"></textarea>
-            </div>
-            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-              <div style="font-size: 0.9rem; color: var(--text-muted);">
-                Marque cada etapa à medida que valida ou ajusta sua loja e anúncios:
-              </div>
-              <button onclick="resetChecklist()" class="btn btn-outline" style="font-size: 0.75rem; padding: 0.2rem 0.6rem;">
-                Resetar Checklist
-              </button>
+            <!-- Checklist do Bloco 19 -->
+            <div class="block-checklist-box">
+              <div class="block-checklist-header">✅ Checklist do bloco</div>
+              <ul class="block-checklist-items">
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Configurar Principais Escolhas (4 novos + 4 campeões)</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Diagnosticar queda de vendas pelos 2 pilares (visitas e conversão)</span>
+                </li>
+                <li class="block-checklist-item">
+                  <input type="checkbox" checked aria-hidden="true">
+                  <span>Melhorar o CTR antes de aumentar o investimento</span>
+                </li>
+              </ul>
             </div>
 
-            <!-- Progress Indicator -->
-            <div class="progress-bar-bg">
-              <div id="checklistProgressBar" class="progress-bar-fill"></div>
-            </div>
-
-            <div class="checklist-items">
-              
-              <label class="checklist-item" data-id="chk1">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Título focado na pesquisa do cliente:</strong> Solução + Benefício principal + Especificações técnicas (considerando nova busca com ChatGPT).</span>
-                <span class="checklist-tag">Bloco 1</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk2">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Atributos 100% preenchidos:</strong> Cor, material, voltagem, tamanho e marca devidamente assinalados na Ficha Técnica.</span>
-                <span class="checklist-tag">Bloco 1</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk3">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Preço de venda alinhado com o mercado:</strong> Média da concorrência checada para garantir cliques iniciais sem sacrificar a margem.</span>
-                <span class="checklist-tag">Bloco 1</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk4">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Respeitar a Regra dos 20 Dias:</strong> Não fazer nenhuma edição em anúncios novos nos primeiros 20 dias para não reiniciar o aprendizado do algoritmo.</span>
-                <span class="checklist-tag">Bloco 1</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk5">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Imagem principal otimizada:</strong> Produto bem iluminado, fundo branco ou neutro, sem poluição de textos/selos sobrepostos.</span>
-                <span class="checklist-tag">Bloco 1</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk6">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Cálculo prévio do ROAS Mínimo:</strong> Preço ÷ Margem de contribuição devidamente calculado ANTES de ligar qualquer campanha de Ads.</span>
-                <span class="checklist-tag">Bloco 2</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk7">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Separação de grupos no Ads:</strong> Anúncios agrupados segregados strictly por estratégia (Grupo Rentabilidade vs Grupo Escala).</span>
-                <span class="checklist-tag">Bloco 2</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk8">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Janela de Aprendizado do Ads (7+ Dias):</strong> Manter campanhas rodando por pelo menos 7 dias inteiros antes de tomar decisões de alteração de orçamento.</span>
-                <span class="checklist-tag">Bloco 2</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk9">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Montar anúncio nos 3 grupos:</strong> Garantir harmonia entre Conversão (fotos 1:1 e 3:4, vídeo e descrição), Indexação (título e categoria) e Fiscal/Logística (SKU, medidas e peso com folga).</span>
-                <span class="checklist-tag">Bloco 3</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk10">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Em loja nova, usar Ads para gerar avaliações e dados:</strong> Priorizar acúmulo de histórico e aprendizado de CTR/conversão, sem pausar ou deixar zerar os créditos.</span>
-                <span class="checklist-tag">Bloco 4</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk11">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Testar Shopee Live em 3 blocos com revisão e CTA:</strong> Conduzir transmissões de 30-60 min com mini-revisão, preços exclusivos de live e CTA clara antes de trocar de item.</span>
-                <span class="checklist-tag">Bloco 5</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk12">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Postar vídeos diariamente no Shopee Vídeo:</strong> Produzir vídeos dinâmicos com narração, legendas e produtos vinculados, explorando vários ângulos do mesmo item.</span>
-                <span class="checklist-tag">Bloco 6</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk13">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Ativar o Cupom Inteligente (pago pela Shopee):</strong> Ligar a ferramenta no Shop Ads e monitorar o ROAS de equilíbrio para não aceitar sugestões de redução em prejuízo.</span>
-                <span class="checklist-tag">Bloco 7</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk14">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Abrir Campanha Aberta de afiliados e esperar 30 dias:</strong> Cadastrar todos os produtos com comissão calculada pela margem de contribuição e analisar a adesão de parceiros.</span>
-                <span class="checklist-tag">Bloco 8</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk15">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Criar kits para subir o ticket médio:</strong> Montar ofertas de 2, 4, 6, 8 ou 10 unidades para multiplicar o lucro absoluto por pacote expedido.</span>
-                <span class="checklist-tag">Bloco 9</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk16">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Zerar devoluções para proteger a visibilidade:</strong> Blindar anúncios com tabela de medidas e embalagens resistentes para evitar rebaixamento pelo algoritmo.</span>
-                <span class="checklist-tag">Bloco 10</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk17">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Se preparar com antecedência para datas duplas:</strong> Entrar nas campanhas oficiais com semanas de antecedência e nunca alterar anúncios na véspera ou no dia do evento.</span>
-                <span class="checklist-tag">Bloco 10</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk18">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Mirar o selo de Vendedor Indicado:</strong> Operar como CNPJ, ativar frete grátis extra e cumprir metas de pedidos (≥30), avaliação (≥4.5) e chat (≥60%) para liberar antecipação de valores D+1.</span>
-                <span class="checklist-tag">Bloco 11</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk19">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Postar pedidos o mais rápido possível (Tempo de Preparação):</strong> Manter média inferior a 1.0 dia útil para acumular "gordura" e garantir permanência no programa.</span>
-                <span class="checklist-tag">Bloco 11</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk20">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Nunca colocar links ou citar outros marketplaces na descrição:</strong> Blindar anúncios contra banimento e penalidades rigorosas do algoritmo.</span>
-                <span class="checklist-tag">Bloco 12</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk21">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Registrar direito autoral das fotos e vídeos próprios:</strong> Ter comprovação oficial para derrubar anúncios de concorrentes que copiarem seu conteúdo.</span>
-                <span class="checklist-tag">Bloco 12</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk22">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Usar marca d'água sem medo:</strong> Aplicar identidade e logotipo nas fotos (não afeta em nada a relevância orgânica e a própria Shopee oferece ferramenta).</span>
-                <span class="checklist-tag">Bloco 12</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk23">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Identificar os anúncios com melhor conversão antes de investir em exposição:</strong> Ajustar criativos e prova social primeiro, para não desperdiçar orçamento de Ads ou Lives em anúncios despreparados.</span>
-                <span class="checklist-tag">Bloco 13/14</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk24">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Ter fornecedores backup:</strong> Mapear alternativas para os mesmos produtos para não pausar anúncios nem cancelar pedidos na fase de escala.</span>
-                <span class="checklist-tag">Bloco 14</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk25">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Responder toda avaliação negativa:</strong> Entrar em contato via chat, solucionar a dor do cliente, solicitar reavaliação cordial ou responder publicamente com profissionalismo.</span>
-                <span class="checklist-tag">Bloco 14</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk26">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Praticar preço competitivo na média do mercado:</strong> Trabalhar alinhado à faixa média de preços em vez de tentar praticar o menor valor e liquidar a margem.</span>
-                <span class="checklist-tag">Bloco 14</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk27">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Aproveitar o polo produtivo da região na escolha de produtos:</strong> Priorizar nichos acessíveis na proximidade local e iniciar com tickets adequados ao fluxo de caixa.</span>
-                <span class="checklist-tag">Bloco 14</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk28">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Manter pontos de penalidade abaixo de 3:</strong> Fiscalizar rigorosamente atrasos e cancelamentos para proteger a loja contra restrições de visibilidade e suspensões de 28 dias.</span>
-                <span class="checklist-tag">Bloco 14</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk29">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Nunca pausar campanhas no Ads:</strong> Ajustar o orçamento conforme os horários de pico em vez de pausar para não perder a janela de aprendizado do leilão.</span>
-                <span class="checklist-tag">Bloco 17</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk30">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Comparar ROAS de pedidos gerados vs. pedidos pagos:</strong> Usar ferramentas auxiliares (ex: SellerBUP) para não tomar decisões de escala baseadas em boletos/PIX cancelados.</span>
-                <span class="checklist-tag">Bloco 17</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk31">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Usar palavras-chave específicas para qualificar o público:</strong> Termos cauda longa com intenção precisa de compra atraem clientes prontos e barateiam o custo por venda.</span>
-                <span class="checklist-tag">Bloco 16</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk32">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Mínimo 6 imagens no carrossel de fotos:</strong> Ângulos variados (frente, detalhes, tecido, medidas e ambientada) acompanhadas de vídeo demonstrativo.</span>
-                <span class="checklist-tag">Bloco 16</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk33">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Ordenar variações da mais vendida para a menos vendida:</strong> Vincular fotos específicas de cor/modelo no 1º grupo e nunca misturar produtos diferentes.</span>
-                <span class="checklist-tag">Bloco 18</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk34">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Configurar Principais Escolhas na loja:</strong> Montar vitrine interna com 4 produtos novos + 4 produtos campeões para ancorar as primeiras vendas e avaliações.</span>
-                <span class="checklist-tag">Bloco 19</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk35">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Desativar produto parado em vez de excluir:</strong> Preservar histórico de métricas e indexação na plataforma em vez de apagar definitivamente.</span>
-                <span class="checklist-tag">Bloco 18</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk36">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Diagnosticar quedas de vendas pelos 2 pilares:</strong> Separar diagnóstico entre Visitas (demanda, sazonalidade, anúncios) e Conversão (fotos, preço, avaliações, oferta).</span>
-                <span class="checklist-tag">Bloco 19</span>
-              </label>
-
-              <label class="checklist-item" data-id="chk37">
-                <input type="checkbox" class="checklist-checkbox" onchange="updateChecklistProgress()" />
-                <span class="checklist-text"><strong>Melhorar o CTR antes de aumentar o investimento:</strong> Otimizar imagem principal e gatilhos de capa para dobrar o tráfego gerado sem elevar o custo por clique.</span>
-                <span class="checklist-tag">Bloco 19</span>
-              </label>
-
-            </div>
           </div>
         </section>
 
@@ -4616,78 +4801,59 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Calculator Initialization & Event Listeners
-      const inputPreco = document.getElementById('inputPreco');
-      const inputCusto = document.getElementById('inputCusto');
-      const inputComissao = document.getElementById('inputComissao');
-      const inputOutros = document.getElementById('inputOutros');
+    /* ================= CALCULADORA DE ROAS DO BLOCO 2 ================= */
+    function calculateRoasBlock2() {
+      const precoInput = document.getElementById('roasB2Preco');
+      const mercadoriaInput = document.getElementById('roasB2Mercadoria');
+      const comissaoInput = document.getElementById('roasB2Comissao');
+      const impostosInput = document.getElementById('roasB2Impostos');
+      const embalagemInput = document.getElementById('roasB2Embalagem');
+      const outrosInput = document.getElementById('roasB2Outros');
 
-      function calculateROAS() {
-        const preco = parseFloat(inputPreco.value) || 0;
-        const custo = parseFloat(inputCusto.value) || 0;
-        const comissaoPct = parseFloat(inputComissao.value) || 0;
-        const outros = parseFloat(inputOutros.value) || 0;
+      const card = document.getElementById('roasResultCard');
+      const mainTxt = document.getElementById('roasResultMain');
+      const margemTxt = document.getElementById('roasMargemTxt');
+      const interpTxt = document.getElementById('roasInterpretationTxt');
 
-        const comissaoReais = preco * (comissaoPct / 100);
-        const margemReais = preco - (custo + comissaoReais + outros);
-        const margemPct = preco > 0 ? (margemReais / preco) * 100 : 0;
+      if (!precoInput || !card) return;
 
-        const resMargemReais = document.getElementById('resMargemReais');
-        const resMargemPct = document.getElementById('resMargemPct');
-        const resRoasMinimo = document.getElementById('resRoasMinimo');
-        const resTargetEscala = document.getElementById('resTargetEscala');
-        const resTargetRent = document.getElementById('resTargetRent');
-        const calcVerdict = document.getElementById('calcVerdict');
-        const verdictRoas = document.getElementById('verdictRoas');
+      const preco = parseFloat(precoInput.value) || 0;
+      const mercadoria = parseFloat(mercadoriaInput?.value) || 0;
+      const comissao = parseFloat(comissaoInput?.value) || 0;
+      const impostos = parseFloat(impostosInput?.value) || 0;
+      const embalagem = parseFloat(embalagemInput?.value) || 0;
+      const outros = parseFloat(outrosInput?.value) || 0;
 
-        resMargemReais.textContent = `R$ ${margemReais.toFixed(2).replace('.', ',')}`;
-        resMargemPct.textContent = `${margemPct.toFixed(1).replace('.', ',')}%`;
+      const somaCustos = mercadoria + comissao + impostos + embalagem + outros;
+      const margem = preco - somaCustos;
 
-        if (margemReais <= 0) {
-          resRoasMinimo.textContent = "N/A (Prejuízo)";
-          resTargetEscala.textContent = "Inviável";
-          resTargetRent.textContent = "Inviável";
-          calcVerdict.className = "warning-box";
-          calcVerdict.style.marginTop = "1rem";
-          calcVerdict.style.textAlign = "center";
-          calcVerdict.innerHTML = "⚠️ <strong>Alerta de Margem Negativa:</strong> Os custos variáveis superam o preço de venda. Ajuste o preço ou negocie o custo antes de investir em Ads!";
-          resMargemReais.style.color = "var(--color-danger)";
-          resMargemPct.style.color = "var(--color-danger)";
-        } else {
-          const roasMinimo = preco / margemReais;
-          resRoasMinimo.textContent = roasMinimo.toFixed(2);
-          verdictRoas.textContent = roasMinimo.toFixed(2);
-
-          // Escala: 1.25x a 1.4x do roas minimo ou baseline 10-11
-          const escalaLow = Math.max(roasMinimo * 1.2, 10).toFixed(1);
-          const escalaHigh = Math.max(roasMinimo * 1.4, 11).toFixed(1);
-          resTargetEscala.textContent = `${escalaLow} - ${escalaHigh}`;
-
-          // Rentabilidade: 1.8x a 2.2x do roas minimo ou baseline 14-17
-          const rentLow = Math.max(roasMinimo * 1.8, 14).toFixed(1);
-          const rentHigh = Math.max(roasMinimo * 2.2, 17).toFixed(1);
-          resTargetRent.textContent = `${rentLow} - ${rentHigh}`;
-
-          calcVerdict.className = "note-box";
-          calcVerdict.style.marginTop = "1rem";
-          calcVerdict.style.textAlign = "center";
-          calcVerdict.innerHTML = `✅ <strong>Diagnóstico da Margem:</strong> Margem de contribuição de R$ ${margemReais.toFixed(2).replace('.', ',')}. Mantenha o ROAS acima de <strong>${roasMinimo.toFixed(2)}</strong> nas campanhas para evitar prejuízo.`;
-
-          resMargemReais.style.color = "var(--color-success)";
-          resMargemPct.style.color = "var(--color-success)";
-        }
+      if (margemTxt) {
+        margemTxt.textContent = `R$ ${margem.toFixed(2).replace('.', ',')}`;
+        margemTxt.style.color = margem > 0 ? 'var(--color-success)' : 'var(--color-danger)';
       }
 
-      inputPreco.addEventListener('input', calculateROAS);
-      inputCusto.addEventListener('input', calculateROAS);
-      inputComissao.addEventListener('input', calculateROAS);
-      inputOutros.addEventListener('input', calculateROAS);
-      
-      calculateROAS(); // initial calculation
+      if (margem <= 0) {
+        card.classList.add('negative');
+        mainTxt.textContent = '⚠️ Margem negativa ou zero — revise seus custos';
+        interpTxt.innerHTML = '<span style="color: var(--color-danger);">Com custos maiores ou iguais ao preço de venda, qualquer anúncio gerará prejuízo!</span>';
+      } else {
+        card.classList.remove('negative');
+        const roasMinimo = preco / margem;
+        const roasFmt = roasMinimo.toFixed(2).replace('.', ',');
+        mainTxt.textContent = `ROAS mínimo (empate): ${roasFmt}`;
+        interpTxt.innerHTML = `
+          <span style="color: var(--color-danger);">Abaixo disso = prejuízo</span>
+          <span style="color: var(--text-muted);">|</span>
+          <span style="color: var(--color-warning);">Igual = empate</span>
+          <span style="color: var(--text-muted);">|</span>
+          <span style="color: var(--color-success);">Acima = lucro</span>
+        `;
+      }
+    }
 
-      // Checklist persistence
-      loadChecklistState();
+    document.addEventListener('DOMContentLoaded', () => {
+      // Calculate ROAS for block 2 on load
+      calculateRoasBlock2();
 
       // Course progress persistence
       loadCourseProgress();
@@ -4773,12 +4939,12 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       });
     }
 
-    /* ================= BARRA DE PROGRESSO DO CURSO (20 ITENS) ================= */
+    /* ================= BARRA DE PROGRESSO DO CURSO (19 BLOCOS) ================= */
     const COURSE_BLOCKS = [
       'bloco-1', 'bloco-2', 'bloco-3', 'bloco-4', 'bloco-5',
       'bloco-6', 'bloco-7', 'bloco-8', 'bloco-9', 'bloco-10',
       'bloco-11', 'bloco-12', 'bloco-13', 'bloco-14', 'bloco-15',
-      'bloco-16', 'bloco-17', 'bloco-18', 'bloco-19', 'checklist'
+      'bloco-16', 'bloco-17', 'bloco-18', 'bloco-19'
     ];
     const COURSE_STORAGE_KEY = 'shopee-estudo-progresso';
 
@@ -4814,17 +4980,21 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         if (sec) sec.classList.toggle('completed', isDone);
       });
 
-      const total = COURSE_BLOCKS.length; // 20
+      const total = COURSE_BLOCKS.length; // 19
       const pct = Math.round((completedCount / total) * 100);
 
       const countEl = document.getElementById('courseProgressCount');
       const barEl = document.getElementById('courseProgressBarFill');
+      const statusNav = document.getElementById('nav-checklist-status');
 
       if (countEl) {
         countEl.textContent = `${completedCount} de ${total} concluídos (${pct}%)`;
       }
       if (barEl) {
         barEl.style.width = `${pct}%`;
+      }
+      if (statusNav) {
+        statusNav.textContent = `☑️ ${completedCount} de ${total} concluídos`;
       }
     }
 
@@ -4852,7 +5022,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     }
 
     async function resetCourseProgress() {
-      if (!confirm('Deseja realmente zerar o progresso do curso e desmarcar todos os 20 blocos concluídos?')) {
+      if (!confirm('Deseja realmente zerar o progresso do curso e desmarcar todos os 19 blocos concluídos?')) {
         return;
       }
 
@@ -4966,68 +5136,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       }
     }
 
-    // Checklist functionality with localStorage
-    function updateChecklistProgress() {
-      const items = document.querySelectorAll('.checklist-item');
-      let checkedCount = 0;
-      const state = {};
 
-      items.forEach(item => {
-        const checkbox = item.querySelector('.checklist-checkbox');
-        const id = item.getAttribute('data-id');
-        if (checkbox.checked) {
-          item.classList.add('checked');
-          checkedCount++;
-          state[id] = true;
-        } else {
-          item.classList.remove('checked');
-          state[id] = false;
-        }
-      });
-
-      const total = items.length;
-      const percentage = (checkedCount / total) * 100;
-
-      const progressBar = document.getElementById('checklistProgressBar');
-      if (progressBar) {
-        progressBar.style.width = `${percentage}%`;
-      }
-
-      const statusNav = document.getElementById('nav-checklist-status');
-      if (statusNav) {
-        statusNav.textContent = `☑️ ${checkedCount}/${total} Checklist concluído`;
-      }
-
-      try {
-        localStorage.setItem('shopee_study_checklist', JSON.stringify(state));
-      } catch (e) {}
-    }
-
-    function loadChecklistState() {
-      try {
-        const saved = localStorage.getItem('shopee_study_checklist');
-        if (!saved) return;
-        const state = JSON.parse(saved);
-
-        const items = document.querySelectorAll('.checklist-item');
-        items.forEach(item => {
-          const id = item.getAttribute('data-id');
-          if (state[id]) {
-            const checkbox = item.querySelector('.checklist-checkbox');
-            checkbox.checked = true;
-          }
-        });
-        updateChecklistProgress();
-      } catch (e) {}
-    }
-
-    function resetChecklist() {
-      if (confirm('Deseja desmarcar todos os itens do checklist?')) {
-        const items = document.querySelectorAll('.checklist-checkbox');
-        items.forEach(cb => cb.checked = false);
-        updateChecklistProgress();
-      }
-    }
 
     /* ================= FIREBASE INTEGRATION & AUTH ================= */
     // Configuração oficial do Firebase
@@ -5296,8 +5405,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       'bloco-16': 'Bloco 16: Engrenagens & Diagnóstico',
       'bloco-17': 'Bloco 17: CPC, Orçamento & ROAS',
       'bloco-18': 'Bloco 18: Orgânico, Variações & Afiliados',
-      'bloco-19': 'Bloco 19: Escala, CTR & Principais Escolhas',
-      'checklist': 'Checklist Rápido de Execução'
+      'bloco-19': 'Bloco 19: Escala, CTR & Principais Escolhas'
     };
 
     const noteTimers = {};
