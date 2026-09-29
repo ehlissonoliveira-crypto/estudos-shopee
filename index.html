@@ -1619,10 +1619,16 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     // 1. FUNÇÃO ÚNICA E BLINDADA showScreen(nome)
     function showScreen(nome) {
       const rawName = String(nome || '').toLowerCase().trim();
-      const screenType = (rawName.includes('curso') && !rawName.includes('cursos') && !rawName.includes('hub')) ? 'curso'
+      let screenType = (rawName.includes('curso') && !rawName.includes('cursos') && !rawName.includes('hub')) ? 'curso'
                        : (rawName.includes('hub') || rawName.includes('cursos')) ? 'cursos'
                        : (rawName.includes('login')) ? 'login'
                        : rawName;
+
+      // GUARD ABSOLUTO: Sem usuário real do Firebase Auth -> Forçar tela de login
+      if ((screenType === 'cursos' || screenType === 'curso') && (!APP_STATE.user || !APP_STATE.user.uid)) {
+        addDebugLog(`Acesso negado à tela ${screenType}: usuário não autenticado no Firebase`);
+        screenType = 'login';
+      }
 
       addDebugLog(`showScreen chamada: ${screenType}`);
       let targetEl = null;
@@ -1751,28 +1757,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     }
 
     function loadSavedState() {
-      // Usuário autenticado (4. Sessão persistente na inicialização)
-      const savedUser = localStorage.getItem('ehlisson-user');
-      if (savedUser) {
-        try {
-          APP_STATE.user = JSON.parse(savedUser);
-          const email = APP_STATE.user.email || APP_STATE.user.name || 'aluno';
-          addDebugLog(`Usuário autenticado: ${email}`);
-          showScreen('cursos');
-          try {
-            updateUserUI(APP_STATE.user);
-          } catch(err) {
-            addDebugLog(`ERRO ao montar usuário: ${err && err.message ? err.message : String(err)}`);
-          }
-          try {
-            loadCloudData(APP_STATE.user);
-          } catch(e) {}
-        } catch(e) {
-          showScreen('login');
-        }
-      } else {
-        showScreen('login');
-      }
+      // A página sempre inicia na tela de login até que o Firebase Auth confirme a autenticação real
+      showScreen('login');
 
       // Progresso dos módulos
       const savedProg = localStorage.getItem('ehlisson-progress');
@@ -2396,40 +2382,39 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
             }
           }, 8000);
 
-          if (typeof firebase !== 'undefined' && firebase.auth) {
-            try {
-              if (!firebase.apps || !firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-              }
-              const provider = new firebase.auth.GoogleAuthProvider();
-              addDebugLog("Popup aberto...");
-              firebase.auth().signInWithPopup(provider)
-                .then((result) => {
-                  addDebugLog("Popup fechado");
-                  if (result && result.user) {
-                    handleAuthSuccess(result.user);
-                  }
-                })
-                .catch((error) => {
-                  addDebugLog("Popup fechado");
-                  handleAuthError(error, provider);
-                });
-            } catch (err) {
-              addDebugLog("Popup fechado");
-              handleAuthError(err);
+          if (typeof firebase === 'undefined' || !firebase.auth) {
+            const reason = "SDK do Firebase não carregado ou indisponível";
+            addDebugLog(`ERRO: Não foi possível conectar ao Firebase: ${reason}`);
+            showLoginError(`🚫 Não foi possível conectar ao Firebase: ${reason}. Verifique a configuração e sua conexão.`);
+            resetLoginBtn();
+            return;
+          }
+
+          try {
+            if (!firebase.apps || !firebase.apps.length) {
+              firebase.initializeApp(firebaseConfig);
             }
-          } else {
-            // Em ambiente sem SDK Firebase injetado
+            const provider = new firebase.auth.GoogleAuthProvider();
             addDebugLog("Popup aberto...");
-            setTimeout(() => {
-              addDebugLog("Popup fechado");
-              handleAuthSuccess({
-                uid: 'user_' + Date.now(),
-                displayName: 'Ehlisson Aluno',
-                email: 'aluno@ehlisson.com.br',
-                photoURL: 'https://img.usecurling.com/ppl/thumbnail?gender=male'
+            firebase.auth().signInWithPopup(provider)
+              .then((result) => {
+                addDebugLog("Popup fechado");
+                if (result && result.user && result.user.uid) {
+                  handleAuthSuccess(result.user);
+                } else {
+                  resetLoginBtn();
+                }
+              })
+              .catch((error) => {
+                addDebugLog("Popup fechado");
+                handleAuthError(error, provider);
               });
-            }, 400);
+          } catch (err) {
+            addDebugLog("Popup fechado");
+            const reason = err && err.message ? err.message : String(err);
+            addDebugLog(`ERRO: Não foi possível conectar ao Firebase: ${reason}`);
+            showLoginError(`🚫 Não foi possível conectar ao Firebase: ${reason}. Verifique a configuração e sua conexão.`);
+            resetLoginBtn();
           }
         });
       }
@@ -2795,46 +2780,62 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       }
     }
 
-    // Único listener onAuthStateChanged centralizado (requisito 6)
+    // Único listener onAuthStateChanged centralizado (sem fallbacks ou usuários fakes)
     function initSingleAuthListener() {
-      if (typeof firebase !== 'undefined' && firebase.auth) {
-        try {
-          if (!firebase.apps || !firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-          }
-          if (!window._authListenerRegistered) {
-            window._authListenerRegistered = true;
-            firebase.auth().onAuthStateChanged((user) => {
-              if (user) {
-                handleAuthSuccess(user);
-              }
-            });
-          }
+      if (typeof firebase === 'undefined' || !firebase.auth) {
+        const reason = "SDK do Firebase não carregado ou indisponível";
+        addDebugLog(`ERRO: Não foi possível conectar ao Firebase: ${reason}`);
+        showLoginError(`🚫 Não foi possível conectar ao Firebase: ${reason}. Verifique a configuração e sua conexão.`);
+        return;
+      }
 
-          // Verificação de retorno de redirect caso popup não esteja disponível
-          firebase.auth().getRedirectResult()
-            .then((result) => {
-              sessionStorage.removeItem('redirect_fallback_attempted');
-              if (result && result.user) {
-                handleAuthSuccess(result.user);
-              }
-            })
-            .catch((error) => {
-              sessionStorage.removeItem('redirect_fallback_attempted');
-              handleAuthError(error);
-            });
-        } catch (err) {
-          console.warn("Firebase Auth listener init warning:", err);
+      try {
+        if (!firebase.apps || !firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
         }
+        if (!window._authListenerRegistered) {
+          window._authListenerRegistered = true;
+          firebase.auth().onAuthStateChanged((user) => {
+            if (user && user.uid) {
+              handleAuthSuccess(user);
+            } else {
+              APP_STATE.user = null;
+              localStorage.removeItem('ehlisson-user');
+              showScreen('login');
+            }
+          });
+        }
+
+        // Verificação de retorno de redirect caso popup não esteja disponível
+        firebase.auth().getRedirectResult()
+          .then((result) => {
+            sessionStorage.removeItem('redirect_fallback_attempted');
+            if (result && result.user && result.user.uid) {
+              handleAuthSuccess(result.user);
+            }
+          })
+          .catch((error) => {
+            sessionStorage.removeItem('redirect_fallback_attempted');
+            handleAuthError(error);
+          });
+      } catch (err) {
+        const reason = err && err.message ? err.message : String(err);
+        addDebugLog(`ERRO: Não foi possível conectar ao Firebase: ${reason}`);
+        showLoginError(`🚫 Não foi possível conectar ao Firebase: ${reason}. Verifique a configuração e sua conexão.`);
       }
     }
 
-    // ORDEM GARANTIDA E TRANSIÇÃO IMEDIATA (Requisitos 1, 2, 3 e 4)
+    // ORDEM GARANTIDA E TRANSIÇÃO IMEDIATA
     function handleAuthSuccess(user) {
-      clearTimeout(loginTimeoutId);
-      const email = (user && (user.email || user.displayName || user.uid)) || 'aluno';
+      if (!user || !user.uid) {
+        addDebugLog("Tentativa de login rejeitada: sem usuário autenticado do Firebase");
+        showScreen('login');
+        return;
+      }
 
-      // (1) log no Debug "Usuário autenticado: [email]"
+      clearTimeout(loginTimeoutId);
+      const email = user.email || user.displayName || user.uid;
+
       addDebugLog(`Usuário autenticado: ${email}`);
 
       const btn = document.getElementById('btn-google-login');
@@ -2848,10 +2849,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
 
       try {
         APP_STATE.user = {
-          uid: (user && user.uid) || ('user_' + Date.now()),
-          name: (user && (user.displayName || user.name)) || 'Aluno',
-          email: (user && user.email) || '',
-          photo: (user && (user.photoURL || user.photo)) || 'https://img.usecurling.com/ppl/thumbnail?gender=male'
+          uid: user.uid,
+          name: user.displayName || 'Aluno',
+          email: user.email || '',
+          photo: user.photoURL || 'https://img.usecurling.com/ppl/thumbnail?gender=male'
         };
         localStorage.setItem('ehlisson-user', JSON.stringify(APP_STATE.user));
       } catch(e) {}
