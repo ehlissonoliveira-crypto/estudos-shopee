@@ -702,6 +702,22 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         Acesso restrito para alunos matriculados
       </div>
     </div>
+
+    <!-- Painel de Debug Recolhível (canto inferior direito) -->
+    <div id="debug-panel-wrap" style="position: absolute; bottom: 1rem; right: 1rem; z-index: 50; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.75rem; max-width: 350px; width: calc(100% - 2rem); text-align: left;">
+      <button id="debug-toggle-btn" type="button" style="background: #181818; color: #aaa; border: 1px solid #333; border-radius: 6px; padding: 0.35rem 0.65rem; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; margin-left: auto; transition: all 0.15s ease;">
+        <span>🐞 Debug</span> <span id="debug-toggle-icon">▲</span>
+      </button>
+      <div id="debug-log-content" style="display: none; margin-top: 0.35rem; background: rgba(18, 18, 18, 0.96); border: 1px solid #333; border-radius: 8px; padding: 0.6rem 0.75rem; color: #aaa; box-shadow: 0 6px 20px rgba(0,0,0,0.7); backdrop-filter: blur(8px);">
+        <div style="font-weight: 700; color: #eee; margin-bottom: 0.35rem; font-size: 0.72rem; border-bottom: 1px solid #2a2a2a; padding-bottom: 0.25rem; display: flex; justify-content: space-between;">
+          <span>Logs de Autenticação (últimos 5)</span>
+          <span style="color: #666; font-weight: normal;">tempo real</span>
+        </div>
+        <ul id="debug-log-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.72rem; word-break: break-all;">
+          <li style="color: #666;">Aguardando ação...</li>
+        </ul>
+      </div>
+    </div>
   </section>
 
   <!-- ================= TELA 2: SELEÇÃO DE CURSOS ================= -->
@@ -1514,9 +1530,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
 
     /* ================= INICIALIZAÇÃO E MIGRAÇÃO ================= */
     document.addEventListener('DOMContentLoaded', () => {
+      initDebugPanel();
       runOldMigration();
       loadSavedState();
-      checkRedirectResult();
+      initSingleAuthListener();
       renderIndex();
       renderCourseModules();
       bindEvents();
@@ -1570,6 +1587,9 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           APP_STATE.user = JSON.parse(savedUser);
           showScreen('screen-hub');
           updateUserUI();
+          addDebugLog(`Usuário autenticado: ${APP_STATE.user.email || APP_STATE.user.name}`);
+          addDebugLog("Tela de cursos exibida");
+          loadCloudData(APP_STATE.user);
         } catch(e) {
           showScreen('screen-login');
         }
@@ -1614,6 +1634,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       localStorage.setItem('ehlisson-last-module', APP_STATE.lastModule);
       updateOverallProgress();
       updateSyncBanner();
+      saveToCloudBackground();
     }
 
     function updateSyncBanner() {
@@ -2203,43 +2224,65 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           document.getElementById('login-spinner').style.display = 'block';
           btnLogin.disabled = true;
 
+          // Timeout de segurança de 8 segundos (requisito 5)
+          clearTimeout(loginTimeoutId);
+          loginTimeoutId = setTimeout(() => {
+            if (!APP_STATE.user && document.getElementById('screen-login').classList.contains('active')) {
+              addDebugLog("ERRO: Timeout de 8s atingido");
+              showLoginError("⏱️ O login demorou demais. Verifique se pop-ups estão permitidos e tente de novo.");
+              resetLoginBtn();
+            }
+          }, 8000);
+
           if (typeof firebase !== 'undefined' && firebase.auth) {
             try {
               if (!firebase.apps || !firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
               }
               const provider = new firebase.auth.GoogleAuthProvider();
+              addDebugLog("Popup aberto...");
               firebase.auth().signInWithPopup(provider)
                 .then((result) => {
+                  addDebugLog("Popup fechado");
                   if (result && result.user) {
                     handleAuthSuccess(result.user);
                   }
                 })
                 .catch((error) => {
+                  addDebugLog("Popup fechado");
                   handleAuthError(error, provider);
                 });
             } catch (err) {
+              addDebugLog("Popup fechado");
               handleAuthError(err);
             }
           } else {
-            // Em ambiente estático sem SDK Firebase injetado
+            // Em ambiente sem SDK Firebase injetado
+            addDebugLog("Popup aberto...");
             setTimeout(() => {
+              addDebugLog("Popup fechado");
               handleAuthSuccess({
                 uid: 'user_' + Date.now(),
                 displayName: 'Ehlisson Aluno',
                 email: 'aluno@ehlisson.com.br',
                 photoURL: 'https://img.usecurling.com/ppl/thumbnail?gender=male'
               });
-            }, 600);
+            }, 400);
           }
         });
       }
 
       // Logout Hub e Curso
       const logoutAction = () => {
+        clearTimeout(loginTimeoutId);
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+          try { firebase.auth().signOut(); } catch(e) {}
+        }
         localStorage.removeItem('ehlisson-user');
         APP_STATE.user = null;
+        resetLoginBtn();
         showScreen('screen-login');
+        addDebugLog("Sessão encerrada");
       };
       const btnLogHub = document.getElementById('btn-logout-hub');
       if (btnLogHub) btnLogHub.addEventListener('click', logoutAction);
@@ -2542,12 +2585,70 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     }
 
     /* ================= TRATAMENTO DE LOGIN & ERROS DE AUTENTICAÇÃO ================= */
-    function checkRedirectResult() {
+    let loginTimeoutId = null;
+    const debugLogs = [];
+
+    function addDebugLog(msg) {
+      const now = new Date();
+      const time = now.toTimeString().split(' ')[0]; // HH:MM:SS
+      debugLogs.push({ time, msg });
+      if (debugLogs.length > 5) {
+        debugLogs.shift();
+      }
+      renderDebugLogs();
+    }
+
+    function renderDebugLogs() {
+      const list = document.getElementById('debug-log-list');
+      if (!list) return;
+      list.innerHTML = debugLogs.map(l => `<li><span style="color: #666;">[${l.time}]</span> <span style="color: #e5e5e5;">${escapeHtml(l.msg)}</span></li>`).join('');
+    }
+
+    function initDebugPanel() {
+      const toggleBtn = document.getElementById('debug-toggle-btn');
+      const content = document.getElementById('debug-log-content');
+      const icon = document.getElementById('debug-toggle-icon');
+      if (toggleBtn && content) {
+        toggleBtn.addEventListener('click', () => {
+          const isHidden = content.style.display === 'none';
+          content.style.display = isHidden ? 'block' : 'none';
+          if (icon) icon.textContent = isHidden ? '▼' : '▲';
+        });
+      }
+    }
+
+    function resetLoginBtn() {
+      const spinner = document.getElementById('login-spinner');
+      if (spinner) spinner.style.display = 'none';
+      const btn = document.getElementById('btn-google-login');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12.24 10.285V13.4h6.887C18.2 16.14 15.645 18 12.24 18c-3.326 0-6.024-2.698-6.024-6s2.698-6 6.024-6c1.558 0 2.946.592 4 1.564l2.42-2.42C16.945 3.513 14.73 2.667 12.24 2.667 7.14 2.667 3 6.807 3 11.907c0 5.1 4.14 9.24 9.24 9.24 5.382 0 8.88-3.78 8.88-9.053 0-.624-.067-1.218-.184-1.809H12.24z"/>
+          </svg>
+          Entrar com Google
+        `;
+      }
+    }
+
+    // Único listener onAuthStateChanged centralizado (requisito 6)
+    function initSingleAuthListener() {
       if (typeof firebase !== 'undefined' && firebase.auth) {
         try {
           if (!firebase.apps || !firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
           }
+          if (!window._authListenerRegistered) {
+            window._authListenerRegistered = true;
+            firebase.auth().onAuthStateChanged((user) => {
+              if (user) {
+                handleAuthSuccess(user);
+              }
+            });
+          }
+
+          // Verificação de retorno de redirect caso popup não esteja disponível
           firebase.auth().getRedirectResult()
             .then((result) => {
               sessionStorage.removeItem('redirect_fallback_attempted');
@@ -2560,13 +2661,17 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               handleAuthError(error);
             });
         } catch (err) {
-          sessionStorage.removeItem('redirect_fallback_attempted');
-          handleAuthError(err);
+          console.warn("Firebase Auth listener init warning:", err);
         }
       }
     }
 
+    // TRANSIÇÃO IMEDIATA (Requisitos 1 e 3)
     function handleAuthSuccess(user) {
+      clearTimeout(loginTimeoutId);
+      const email = user.email || user.displayName || user.uid || 'aluno';
+      addDebugLog(`Usuário autenticado: ${email}`);
+
       APP_STATE.user = {
         uid: user.uid,
         name: user.displayName || user.name || 'Aluno',
@@ -2575,30 +2680,116 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       };
       localStorage.setItem('ehlisson-user', JSON.stringify(APP_STATE.user));
       updateUserUI();
-      const spinner = document.getElementById('login-spinner');
-      if (spinner) spinner.style.display = 'none';
+
+      // Feedback visível no botão de login
       const btn = document.getElementById('btn-google-login');
-      if (btn) btn.disabled = false;
-      hideLoginError();
-      showScreen('screen-hub');
+      if (btn) {
+        btn.innerHTML = '✅ Login realizado! Abrindo...';
+        btn.disabled = true;
+      }
+
+      // Transição imediata em no máximo 400ms para Tela 2 (seleção de cursos)
+      // ANTES de qualquer chamada assíncrona ao Firestore
+      setTimeout(() => {
+        const spinner = document.getElementById('login-spinner');
+        if (spinner) spinner.style.display = 'none';
+        hideLoginError();
+
+        if (document.getElementById('screen-login').classList.contains('active')) {
+          showScreen('screen-hub');
+          addDebugLog("Tela de cursos exibida");
+        }
+        resetLoginBtn();
+
+        // SÓ DEPOIS de trocar a tela, inicia o carregamento de dados em segundo plano (requisito 1b)
+        loadCloudData(user);
+      }, 350);
+    }
+
+    // CARREGAMENTO NÃO-BLOQUEANTE (Requisito 2)
+    async function loadCloudData(user) {
+      if (!user || !user.uid) return;
+      addDebugLog("Carregando dados da nuvem...");
+
+      try {
+        if (typeof firebase !== 'undefined' && firebase.firestore) {
+          if (!firebase.apps || !firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+          }
+          const db = firebase.firestore();
+          // Leitura não-bloqueante protegida por try/catch
+          const docSnap = await db.collection("anotacoes").doc(user.uid).get();
+
+          if (docSnap && docSnap.exists) {
+            const cloudData = docSnap.data();
+            if (cloudData) {
+              if (cloudData.progress) APP_STATE.progress = { ...APP_STATE.progress, ...cloudData.progress };
+              if (cloudData.checklists) APP_STATE.checklists = { ...APP_STATE.checklists, ...cloudData.checklists };
+              if (cloudData.notes) APP_STATE.notes = { ...APP_STATE.notes, ...cloudData.notes };
+              if (cloudData.lastModule) APP_STATE.lastModule = cloudData.lastModule;
+              localStorage.setItem('ehlisson-progress', JSON.stringify(APP_STATE.progress));
+              localStorage.setItem('ehlisson-checklists', JSON.stringify(APP_STATE.checklists));
+              localStorage.setItem('ehlisson-notes', JSON.stringify(APP_STATE.notes));
+              localStorage.setItem('ehlisson-last-module', APP_STATE.lastModule);
+              renderCourseModules();
+              updateOverallProgress();
+            }
+          }
+          addDebugLog("Dados carregados OK");
+          updateSyncBanner();
+        } else {
+          // SDK do Firestore não presente, permanece no modo localStorage
+          addDebugLog("Dados carregados OK");
+          updateSyncBanner();
+        }
+      } catch (err) {
+        const errMsg = (err && (err.message || err.code)) ? (err.message || err.code) : String(err);
+        console.warn("Falha não-bloqueante no Firestore:", err);
+        addDebugLog(`ERRO: ${errMsg}`);
+
+        // Aviso discreto no rodapé mantendo a tela visível e modo local ativo
+        const banner = document.getElementById('sync-status');
+        if (banner) {
+          banner.innerHTML = `⚠️ Não foi possível carregar dados da nuvem (modo local ativo): ${escapeHtml(errMsg)}`;
+          banner.style.color = "#f59e0b";
+        }
+      }
+    }
+
+    // Persistência em segundo plano na nuvem sem bloquear a interface
+    function saveToCloudBackground() {
+      if (!APP_STATE.user || !APP_STATE.user.uid) return;
+      if (typeof firebase !== 'undefined' && firebase.firestore) {
+        try {
+          const db = firebase.firestore();
+          db.collection("anotacoes").doc(APP_STATE.user.uid).set({
+            progress: APP_STATE.progress,
+            checklists: APP_STATE.checklists,
+            notes: APP_STATE.notes,
+            lastModule: APP_STATE.lastModule,
+            updatedAt: new Date().toISOString()
+          }, { merge: true }).catch((err) => {
+            console.warn("Aviso ao sincronizar notas com a nuvem:", err);
+          });
+        } catch(e) {
+          console.warn("Aviso na tentativa de persistência em segundo plano:", e);
+        }
+      }
     }
 
     function handleAuthError(error, provider) {
-      const spinner = document.getElementById('login-spinner');
-      if (spinner) spinner.style.display = 'none';
-      const btn = document.getElementById('btn-google-login');
-      if (btn) btn.disabled = false;
+      clearTimeout(loginTimeoutId);
+      resetLoginBtn();
 
       const code = (error && error.code) || '';
       let friendlyMsg = '';
 
       if (code === 'auth/unauthorized-domain') {
-        friendlyMsg = '🚫 Domínio não autorizado: este endereço não está na lista de domínios autorizados do Firebase. Vá em console.firebase.google.com → Authentication → Settings → Authorized domains e adicione o domínio deste site.';
+        friendlyMsg = '🚫 Domínio não autorizado: adicione este endereço em Authorized domains no Firebase console.';
       } else if (code === 'auth/operation-not-allowed') {
-        friendlyMsg = '🚫 O login com Google não está ativado no Firebase. Ative em Authentication → Sign-in method → Google.';
+        friendlyMsg = '🚫 O login com Google não está ativado no Firebase. Ative no console em Sign-in method.';
       } else if (code === 'auth/popup-blocked' || code === 'auth/popup-closed-by-user') {
         friendlyMsg = '⚠️ O navegador bloqueou a janela de login. Permita pop-ups para este site.';
-        // Fallback automático com signInWithRedirect (uma única tentativa para evitar loop)
         const alreadyAttempted = sessionStorage.getItem('redirect_fallback_attempted');
         if (!alreadyAttempted && typeof firebase !== 'undefined' && firebase.auth && provider) {
           sessionStorage.setItem('redirect_fallback_attempted', 'true');
@@ -2621,6 +2812,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         friendlyMsg = `Erro: ${String(error)}`;
       }
 
+      addDebugLog(`ERRO: ${code || (error && error.message) || friendlyMsg}`);
       showLoginError(friendlyMsg);
     }
 
@@ -2638,6 +2830,16 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         errBox.textContent = '';
         errBox.style.display = 'none';
       }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
     }
 
     function removeAccents(str) {
