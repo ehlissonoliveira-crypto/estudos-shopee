@@ -149,12 +149,15 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     /* Tela 1: Login */
     #screen-login {
       min-height: 100vh;
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;
       position: relative;
       background: radial-gradient(circle at 50% 30%, rgba(238, 77, 45, 0.15) 0%, transparent 65%), #0a0a0a;
       padding: 1.5rem;
+    }
+    #screen-login.active {
+      display: flex;
     }
     .login-card {
       background: var(--surface-card);
@@ -674,7 +677,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
 <body>
 
   <!-- ================= TELA 1: LOGIN ================= -->
-  <section id="screen-login" class="screen active">
+  <section id="screen-login" class="screen active" data-screen="login">
     <div class="login-card">
       <div class="brand-logo-glow">
         <span>🛍️</span> Cursos Ehlisson
@@ -703,25 +706,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       </div>
     </div>
 
-    <!-- Painel de Debug Recolhível (canto inferior direito) -->
-    <div id="debug-panel-wrap" style="position: absolute; bottom: 1rem; right: 1rem; z-index: 50; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.75rem; max-width: 350px; width: calc(100% - 2rem); text-align: left;">
-      <button id="debug-toggle-btn" type="button" style="background: #181818; color: #aaa; border: 1px solid #333; border-radius: 6px; padding: 0.35rem 0.65rem; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; margin-left: auto; transition: all 0.15s ease;">
-        <span>🐞 Debug</span> <span id="debug-toggle-icon">▲</span>
-      </button>
-      <div id="debug-log-content" style="display: none; margin-top: 0.35rem; background: rgba(18, 18, 18, 0.96); border: 1px solid #333; border-radius: 8px; padding: 0.6rem 0.75rem; color: #aaa; box-shadow: 0 6px 20px rgba(0,0,0,0.7); backdrop-filter: blur(8px);">
-        <div style="font-weight: 700; color: #eee; margin-bottom: 0.35rem; font-size: 0.72rem; border-bottom: 1px solid #2a2a2a; padding-bottom: 0.25rem; display: flex; justify-content: space-between;">
-          <span>Logs de Autenticação (últimos 5)</span>
-          <span style="color: #666; font-weight: normal;">tempo real</span>
-        </div>
-        <ul id="debug-log-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.72rem; word-break: break-all;">
-          <li style="color: #666;">Aguardando ação...</li>
-        </ul>
-      </div>
-    </div>
   </section>
 
   <!-- ================= TELA 2: SELEÇÃO DE CURSOS ================= -->
-  <section id="screen-hub" class="screen">
+  <section id="screen-hub" class="screen" data-screen="cursos">
     <header class="top-header">
       <div class="top-header-inner">
         <div style="font-weight: 700; font-size: 1.15rem; color: #EE4D2D; display: flex; align-items: center; gap: 0.4rem;">
@@ -818,7 +806,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
   </section>
 
   <!-- ================= TELA 3: O CURSO SHOPEE ================= -->
-  <section id="screen-course" class="screen">
+  <section id="screen-course" class="screen" data-screen="curso">
     <!-- Cabeçalho do Curso -->
     <header class="top-header">
       <div class="top-header-inner">
@@ -954,6 +942,22 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       </div>
     </div>
   </footer>
+
+  <!-- Painel de Debug Recolhível Fixo (acessível em todas as telas) -->
+  <div id="debug-panel-wrap" style="position: fixed; bottom: 1rem; right: 1rem; z-index: 9999; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.75rem; max-width: 350px; width: calc(100% - 2rem); text-align: left;">
+    <button id="debug-toggle-btn" type="button" style="background: #181818; color: #aaa; border: 1px solid #333; border-radius: 6px; padding: 0.35rem 0.65rem; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; margin-left: auto; transition: all 0.15s ease;">
+      <span>🐞 Debug</span> <span id="debug-toggle-icon">▲</span>
+    </button>
+    <div id="debug-log-content" style="display: none; margin-top: 0.35rem; background: rgba(18, 18, 18, 0.96); border: 1px solid #333; border-radius: 8px; padding: 0.6rem 0.75rem; color: #aaa; box-shadow: 0 6px 20px rgba(0,0,0,0.7); backdrop-filter: blur(8px);">
+      <div style="font-weight: 700; color: #eee; margin-bottom: 0.35rem; font-size: 0.72rem; border-bottom: 1px solid #2a2a2a; padding-bottom: 0.25rem; display: flex; justify-content: space-between;">
+        <span>Logs de Transição e Auth</span>
+        <span style="color: #666; font-weight: normal;">tempo real</span>
+      </div>
+      <ul id="debug-log-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.72rem; word-break: break-all;">
+        <li style="color: #666;">Aguardando ação...</li>
+      </ul>
+    </div>
+  </div>
 
   <!-- Barra fixa no rodapé para captura global de erros JavaScript -->
   <div id="global-error-bar" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #7f1d1d; color: #fee2e2; border-top: 1px solid #ef4444; padding: 0.65rem 1.25rem; font-size: 0.82rem; z-index: 99999; cursor: pointer; box-shadow: 0 -2px 12px rgba(0,0,0,0.6); justify-content: space-between; align-items: center; gap: 0.75rem;" title="Clique para fechar">
@@ -1579,22 +1583,195 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       localStorage.setItem('migracao-v3', 'concluida');
     }
 
+    function findScreenElement(name) {
+      const norm = String(name || '').toLowerCase().trim();
+      const screenCandidates = {
+        login: ['screen-login', 'tela-login', 'login-screen', 'login'],
+        cursos: ['screen-hub', 'screen-cursos', 'tela-hub', 'tela-cursos', 'hub-screen', 'hub', 'cursos'],
+        hub: ['screen-hub', 'screen-cursos', 'tela-hub', 'tela-cursos', 'hub-screen', 'hub', 'cursos'],
+        curso: ['screen-course', 'screen-curso', 'tela-curso', 'course-screen', 'course', 'curso'],
+        course: ['screen-course', 'screen-curso', 'tela-curso', 'course-screen', 'course', 'curso']
+      };
+
+      let list = screenCandidates[norm];
+      if (!list) {
+        for (const [key, arr] of Object.entries(screenCandidates)) {
+          if (norm.includes(key)) { list = arr; break; }
+        }
+      }
+      if (!list) {
+        list = [norm, `screen-${norm}`, `tela-${norm}`];
+      }
+
+      for (const id of list) {
+        const elById = document.getElementById(id);
+        if (elById) return elById;
+        const elByData = document.querySelector(`[data-screen="${id}"]`);
+        if (elByData) return elByData;
+        const elByClass = document.querySelector(`.${id}`);
+        if (elByClass) return elByClass;
+        const elBySel = document.querySelector(`#${id}`);
+        if (elBySel) return elBySel;
+      }
+      return null;
+    }
+
+    // 1. FUNÇÃO ÚNICA E BLINDADA showScreen(nome)
+    function showScreen(nome) {
+      const rawName = String(nome || '').toLowerCase().trim();
+      const screenType = (rawName.includes('curso') && !rawName.includes('cursos') && !rawName.includes('hub')) ? 'curso'
+                       : (rawName.includes('hub') || rawName.includes('cursos')) ? 'cursos'
+                       : (rawName.includes('login')) ? 'login'
+                       : rawName;
+
+      addDebugLog(`showScreen chamada: ${screenType}`);
+      let targetEl = null;
+
+      try {
+        const elLogin = findScreenElement('login');
+        const elCursos = findScreenElement('cursos');
+        const elCurso = findScreenElement('curso');
+
+        if (!elLogin) addDebugLog("ERRO: Elemento tela login não encontrado");
+        if (!elCursos) addDebugLog("ERRO: Elemento tela cursos não encontrado");
+        if (!elCurso) addDebugLog("ERRO: Elemento tela curso não encontrado");
+
+        targetEl = (screenType === 'login') ? elLogin
+                 : (screenType === 'cursos') ? elCursos
+                 : (screenType === 'curso') ? elCurso
+                 : findScreenElement(rawName);
+
+        if (!targetEl) {
+          addDebugLog(`ERRO: Elemento destino da tela ${screenType} não encontrado`);
+          targetEl = document.getElementById('screen-hub') || document.getElementById('screen-login') || document.querySelector('.screen');
+        }
+
+        if (screenType === 'cursos') {
+          if (elLogin) {
+            elLogin.style.display = 'none';
+            elLogin.classList.remove('active');
+            addDebugLog("Tela login ocultada");
+          }
+          if (elCurso) {
+            elCurso.style.display = 'none';
+            elCurso.classList.remove('active');
+          }
+          if (targetEl) {
+            targetEl.style.display = 'block';
+            targetEl.classList.add('active');
+            addDebugLog("Tela cursos exibida");
+          }
+        } else if (screenType === 'curso') {
+          if (elLogin) {
+            elLogin.style.display = 'none';
+            elLogin.classList.remove('active');
+          }
+          if (elCursos) {
+            elCursos.style.display = 'none';
+            elCursos.classList.remove('active');
+            addDebugLog("Tela cursos ocultada");
+          }
+          if (targetEl) {
+            targetEl.style.display = 'block';
+            targetEl.classList.add('active');
+            addDebugLog("Tela curso exibida");
+          }
+        } else {
+          // login
+          if (elCursos) {
+            elCursos.style.display = 'none';
+            elCursos.classList.remove('active');
+          }
+          if (elCurso) {
+            elCurso.style.display = 'none';
+            elCurso.classList.remove('active');
+          }
+          if (targetEl) {
+            targetEl.style.display = 'flex';
+            targetEl.classList.add('active');
+            addDebugLog("Tela login exibida");
+          }
+        }
+
+        try { window.scrollTo(0, 0); } catch(e) {}
+      } catch (err) {
+        const errMsg = err && err.message ? err.message : String(err);
+        addDebugLog(`ERRO em showScreen: ${errMsg}`);
+        try {
+          if (targetEl) {
+            targetEl.style.display = (screenType === 'login') ? 'flex' : 'block';
+            targetEl.classList.add('active');
+          } else {
+            const fallback = document.getElementById('screen-hub') || document.getElementById('screen-login');
+            if (fallback) {
+              fallback.style.display = 'block';
+              fallback.classList.add('active');
+            }
+          }
+        } catch(e2) {}
+      }
+    }
+
+    // 2. MONTAGEM DO USUÁRIO SEPARADA E BLINDADA
+    function updateUserUI(userObj) {
+      try {
+        const user = userObj || APP_STATE.user;
+        const name = (user && (user.displayName || user.name)) ? (user.displayName || user.name) : 'Aluno';
+        const photo = (user && (user.photoURL || user.photo)) ? (user.photoURL || user.photo) : '';
+
+        const hubGreeting = document.getElementById('hub-greeting');
+        if (hubGreeting) hubGreeting.textContent = `🎓 Olá, ${name}! Escolha seu curso`;
+
+        const hubName = document.getElementById('hub-user-name');
+        if (hubName) hubName.textContent = name;
+
+        const defaultAvatar = 'https://img.usecurling.com/ppl/thumbnail?gender=male';
+
+        const hubPhoto = document.getElementById('hub-user-photo');
+        if (hubPhoto) {
+          hubPhoto.src = photo || defaultAvatar;
+          hubPhoto.onerror = () => { hubPhoto.src = defaultAvatar; };
+        }
+
+        const coursePhoto = document.getElementById('course-user-photo');
+        if (coursePhoto) {
+          coursePhoto.src = photo || defaultAvatar;
+          coursePhoto.onerror = () => { coursePhoto.src = defaultAvatar; };
+        }
+
+        addDebugLog("Nome/foto montados");
+      } catch (err) {
+        const errMsg = err && err.message ? err.message : String(err);
+        addDebugLog(`ERRO ao montar usuário: ${errMsg}`);
+        try {
+          const hubName = document.getElementById('hub-user-name');
+          if (hubName) hubName.textContent = "👤 Aluno";
+        } catch(e) {}
+      }
+    }
+
     function loadSavedState() {
-      // Usuário autenticado
+      // Usuário autenticado (4. Sessão persistente na inicialização)
       const savedUser = localStorage.getItem('ehlisson-user');
       if (savedUser) {
         try {
           APP_STATE.user = JSON.parse(savedUser);
-          showScreen('screen-hub');
-          updateUserUI();
-          addDebugLog(`Usuário autenticado: ${APP_STATE.user.email || APP_STATE.user.name}`);
-          addDebugLog("Tela de cursos exibida");
-          loadCloudData(APP_STATE.user);
+          const email = APP_STATE.user.email || APP_STATE.user.name || 'aluno';
+          addDebugLog(`Usuário autenticado: ${email}`);
+          showScreen('cursos');
+          try {
+            updateUserUI(APP_STATE.user);
+          } catch(err) {
+            addDebugLog(`ERRO ao montar usuário: ${err && err.message ? err.message : String(err)}`);
+          }
+          try {
+            loadCloudData(APP_STATE.user);
+          } catch(e) {}
         } catch(e) {
-          showScreen('screen-login');
+          showScreen('login');
         }
       } else {
-        showScreen('screen-login');
+        showScreen('login');
       }
 
       // Progresso dos módulos
@@ -1647,24 +1824,6 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         banner.innerHTML = "☁️ Salvo na nuvem";
         banner.style.color = "#22c55e";
       }
-    }
-
-    function showScreen(screenId) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      const target = document.getElementById(screenId);
-      if (target) target.classList.add('active');
-      window.scrollTo(0,0);
-    }
-
-    function updateUserUI() {
-      if (!APP_STATE.user) return;
-      const name = APP_STATE.user.name || 'Aluno';
-      const photo = APP_STATE.user.photo || 'https://img.usecurling.com/ppl/thumbnail?gender=male';
-
-      document.getElementById('hub-greeting').textContent = `🎓 Olá, ${name}! Escolha seu curso`;
-      document.getElementById('hub-user-name').textContent = name;
-      document.getElementById('hub-user-photo').src = photo;
-      document.getElementById('course-user-photo').src = photo;
     }
 
     /* ================= RENDERIZAÇÃO DO CURSO ================= */
@@ -2221,13 +2380,16 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       if (btnLogin) {
         btnLogin.addEventListener('click', () => {
           hideLoginError();
-          document.getElementById('login-spinner').style.display = 'block';
+          const spinner = document.getElementById('login-spinner');
+          if (spinner) spinner.style.display = 'block';
           btnLogin.disabled = true;
 
-          // Timeout de segurança de 8 segundos (requisito 5)
+          // Timeout de segurança de 8 segundos
           clearTimeout(loginTimeoutId);
           loginTimeoutId = setTimeout(() => {
-            if (!APP_STATE.user && document.getElementById('screen-login').classList.contains('active')) {
+            const loginEl = findScreenElement('login');
+            const isLoginActive = loginEl && (loginEl.style.display !== 'none') && loginEl.classList.contains('active');
+            if (!APP_STATE.user && isLoginActive) {
               addDebugLog("ERRO: Timeout de 8s atingido");
               showLoginError("⏱️ O login demorou demais. Verifique se pop-ups estão permitidos e tente de novo.");
               resetLoginBtn();
@@ -2281,7 +2443,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         localStorage.removeItem('ehlisson-user');
         APP_STATE.user = null;
         resetLoginBtn();
-        showScreen('screen-login');
+        showScreen('login');
         addDebugLog("Sessão encerrada");
       };
       const btnLogHub = document.getElementById('btn-logout-hub');
@@ -2293,7 +2455,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       const btnEnter = document.getElementById('btn-enter-shopee');
       if (btnEnter) {
         btnEnter.addEventListener('click', () => {
-          showScreen('screen-course');
+          showScreen('curso');
           openAndScrollToModule(APP_STATE.lastModule || 1);
         });
       }
@@ -2302,7 +2464,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       const btnBack = document.getElementById('btn-back-hub');
       if (btnBack) {
         btnBack.addEventListener('click', () => {
-          showScreen('screen-hub');
+          showScreen('cursos');
         });
       }
 
@@ -2575,8 +2737,9 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           btn.addEventListener('click', (e) => {
             const targetMod = parseInt(e.currentTarget.getAttribute('data-mod'), 10);
             modal.classList.remove('active');
-            if (!document.getElementById('screen-course').classList.contains('active')) {
-              showScreen('screen-course');
+            const courseEl = findScreenElement('curso');
+            if (!courseEl || !courseEl.classList.contains('active') || courseEl.style.display === 'none') {
+              showScreen('curso');
             }
             openAndScrollToModule(targetMod);
           });
@@ -2592,7 +2755,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       const now = new Date();
       const time = now.toTimeString().split(' ')[0]; // HH:MM:SS
       debugLogs.push({ time, msg });
-      if (debugLogs.length > 5) {
+      if (debugLogs.length > 10) {
         debugLogs.shift();
       }
       renderDebugLogs();
@@ -2666,44 +2829,51 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       }
     }
 
-    // TRANSIÇÃO IMEDIATA (Requisitos 1 e 3)
+    // ORDEM GARANTIDA E TRANSIÇÃO IMEDIATA (Requisitos 1, 2, 3 e 4)
     function handleAuthSuccess(user) {
       clearTimeout(loginTimeoutId);
-      const email = user.email || user.displayName || user.uid || 'aluno';
+      const email = (user && (user.email || user.displayName || user.uid)) || 'aluno';
+
+      // (1) log no Debug "Usuário autenticado: [email]"
       addDebugLog(`Usuário autenticado: ${email}`);
 
-      APP_STATE.user = {
-        uid: user.uid,
-        name: user.displayName || user.name || 'Aluno',
-        email: user.email || '',
-        photo: user.photoURL || user.photo || 'https://img.usecurling.com/ppl/thumbnail?gender=male'
-      };
-      localStorage.setItem('ehlisson-user', JSON.stringify(APP_STATE.user));
-      updateUserUI();
-
-      // Feedback visível no botão de login
       const btn = document.getElementById('btn-google-login');
       if (btn) {
         btn.innerHTML = '✅ Login realizado! Abrindo...';
         btn.disabled = true;
       }
+      const spinner = document.getElementById('login-spinner');
+      if (spinner) spinner.style.display = 'none';
+      hideLoginError();
 
-      // Transição imediata em no máximo 400ms para Tela 2 (seleção de cursos)
-      // ANTES de qualquer chamada assíncrona ao Firestore
-      setTimeout(() => {
-        const spinner = document.getElementById('login-spinner');
-        if (spinner) spinner.style.display = 'none';
-        hideLoginError();
+      try {
+        APP_STATE.user = {
+          uid: (user && user.uid) || ('user_' + Date.now()),
+          name: (user && (user.displayName || user.name)) || 'Aluno',
+          email: (user && user.email) || '',
+          photo: (user && (user.photoURL || user.photo)) || 'https://img.usecurling.com/ppl/thumbnail?gender=male'
+        };
+        localStorage.setItem('ehlisson-user', JSON.stringify(APP_STATE.user));
+      } catch(e) {}
 
-        if (document.getElementById('screen-login').classList.contains('active')) {
-          showScreen('screen-hub');
-          addDebugLog("Tela de cursos exibida");
-        }
-        resetLoginBtn();
+      // (2) chamar showScreen('cursos') IMEDIATAMENTE
+      showScreen('cursos');
+      resetLoginBtn();
 
-        // SÓ DEPOIS de trocar a tela, inicia o carregamento de dados em segundo plano (requisito 1b)
+      // (3) só depois montar nome/foto e carregar dados da nuvem (cada um em try/catch próprio)
+      try {
+        updateUserUI(user);
+      } catch(err) {
+        const errMsg = err && err.message ? err.message : String(err);
+        addDebugLog(`ERRO ao montar usuário: ${errMsg}`);
+      }
+
+      try {
         loadCloudData(user);
-      }, 350);
+      } catch(err) {
+        const errMsg = err && err.message ? err.message : String(err);
+        addDebugLog(`ERRO ao carregar dados: ${errMsg}`);
+      }
     }
 
     // CARREGAMENTO NÃO-BLOQUEANTE (Requisito 2)
