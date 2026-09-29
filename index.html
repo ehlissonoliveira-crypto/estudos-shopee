@@ -323,27 +323,111 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     .index-sidebar::-webkit-scrollbar-track { background: #151515; }
     .index-sidebar::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
 
+    /* Accordion das Etapas */
+    .stage-card {
+      background: #111111;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin-bottom: 1.25rem;
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .stage-card.is-open {
+      border-color: rgba(238, 77, 45, 0.35);
+    }
+    .stage-header {
+      padding: 1.15rem 1.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      user-select: none;
+      background: #171717;
+      transition: background 0.15s;
+    }
+    .stage-header:hover { background: #1e1e1e; }
+    .stage-title-area {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #EE4D2D;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .stage-chevron {
+      font-size: 0.9rem;
+      color: #888;
+      transition: transform 0.2s;
+    }
+    .stage-card.is-open .stage-chevron {
+      transform: rotate(90deg);
+      color: #EE4D2D;
+    }
+    .stage-body {
+      display: none;
+      padding: 1rem 1rem 0.5rem 1rem;
+      background: #0f0f0f;
+    }
+    .stage-card.is-open .stage-body {
+      display: block;
+    }
+
+    /* Índice Lateral com Etapas Accordion */
+    .index-stage-group {
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid #222;
+      padding-bottom: 0.35rem;
+    }
     .index-stage-header {
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
       color: #EE4D2D;
-      margin: 1.25rem 0 0.5rem 0;
-      padding-bottom: 0.3rem;
-      border-bottom: 1px solid rgba(238, 77, 45, 0.3);
-      position: relative;
+      padding: 0.55rem 0.4rem;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.15s;
+      user-select: none;
     }
-    .index-stage-header:first-of-type { margin-top: 0.25rem; }
+    .index-stage-header:hover {
+      background: #1c1c1c;
+      color: #ff6e50;
+    }
+    .index-stage-header .idx-stage-chev {
+      font-size: 0.75rem;
+      color: #777;
+      margin-right: 0.4rem;
+      transition: transform 0.2s;
+    }
+    .index-stage-group.is-open .index-stage-header .idx-stage-chev {
+      transform: rotate(90deg);
+      color: #EE4D2D;
+    }
+    .index-stage-modules {
+      display: none;
+      padding-left: 0.65rem;
+      margin-top: 0.2rem;
+      border-left: 2px solid #232323;
+    }
+    .index-stage-group.is-open .index-stage-modules {
+      display: block;
+    }
 
     .index-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 0.5rem;
-      padding: 0.5rem 0.6rem;
+      padding: 0.45rem 0.5rem;
       border-radius: 6px;
-      font-size: 0.85rem;
+      font-size: 0.83rem;
       color: #d1d5db;
       cursor: pointer;
       text-decoration: none;
@@ -357,17 +441,6 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     }
     .index-item.is-completed {
       color: #86efac;
-    }
-    .index-item.calc-item {
-      background: rgba(238, 77, 45, 0.08);
-      border-color: rgba(238, 77, 45, 0.3);
-      color: #ffa089;
-      font-weight: 600;
-      margin: 0.75rem 0;
-    }
-    .index-item.calc-item:hover {
-      background: rgba(238, 77, 45, 0.18);
-      color: #ffffff;
     }
 
     /* Accordions dos Módulos */
@@ -825,9 +898,6 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         </div>
 
         <div style="display: flex; align-items: center; gap: 0.6rem;">
-          <button id="btn-print-doc" class="btn-print btn" style="background: #222; border: 1px solid var(--border); color: #ccc; font-size: 0.8rem; padding: 0.35rem 0.65rem; border-radius: 6px; cursor: pointer;">
-            🖨️ Imprimir / PDF
-          </button>
           <div class="user-pill" style="padding: 0.25rem 0.6rem;">
             <img id="course-user-photo" src="https://img.usecurling.com/ppl/thumbnail?gender=male" alt="Usuário">
             <button id="btn-logout-course" style="background: transparent; border: none; color: #888; font-size: 0.75rem; cursor: pointer;">Sair</button>
@@ -844,14 +914,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
             📊 Progresso: 0 de 22 módulos concluídos (0%)
           </span>
           <div style="display: flex; gap: 0.75rem; align-items: center;">
-            <button id="btn-export-notes" style="background: transparent; border: none; color: #aaa; font-size: 0.75rem; cursor: pointer; text-decoration: underline;">
-              💾 Exportar anotações (.json)
-            </button>
-            <label for="input-import-notes" style="background: transparent; border: none; color: #aaa; font-size: 0.75rem; cursor: pointer; text-decoration: underline;">
-              📂 Importar
-            </label>
-            <input type="file" id="input-import-notes" accept=".json" style="display: none;">
-            <button id="btn-reset-prog" style="background: transparent; border: none; color: #ef4444; font-size: 0.75rem; cursor: pointer; margin-left: 0.5rem;">
+            <button id="btn-reset-prog" style="background: transparent; border: none; color: #ef4444; font-size: 0.75rem; cursor: pointer;">
               ↺ Zerar progresso
             </button>
           </div>
@@ -942,22 +1005,6 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       </div>
     </div>
   </footer>
-
-  <!-- Painel de Debug Recolhível Fixo (acessível em todas as telas) -->
-  <div id="debug-panel-wrap" style="position: fixed; bottom: 1rem; right: 1rem; z-index: 9999; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.75rem; max-width: 350px; width: calc(100% - 2rem); text-align: left;">
-    <button id="debug-toggle-btn" type="button" style="background: #181818; color: #aaa; border: 1px solid #333; border-radius: 6px; padding: 0.35rem 0.65rem; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; margin-left: auto; transition: all 0.15s ease;">
-      <span>🐞 Debug</span> <span id="debug-toggle-icon">▲</span>
-    </button>
-    <div id="debug-log-content" style="display: none; margin-top: 0.35rem; background: rgba(18, 18, 18, 0.96); border: 1px solid #333; border-radius: 8px; padding: 0.6rem 0.75rem; color: #aaa; box-shadow: 0 6px 20px rgba(0,0,0,0.7); backdrop-filter: blur(8px);">
-      <div style="font-weight: 700; color: #eee; margin-bottom: 0.35rem; font-size: 0.72rem; border-bottom: 1px solid #2a2a2a; padding-bottom: 0.25rem; display: flex; justify-content: space-between;">
-        <span>Logs de Transição e Auth</span>
-        <span style="color: #666; font-weight: normal;">tempo real</span>
-      </div>
-      <ul id="debug-log-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.72rem; word-break: break-all;">
-        <li style="color: #666;">Aguardando ação...</li>
-      </ul>
-    </div>
-  </div>
 
   <!-- Barra fixa no rodapé para captura global de erros JavaScript -->
   <div id="global-error-bar" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #7f1d1d; color: #fee2e2; border-top: 1px solid #ef4444; padding: 0.65rem 1.25rem; font-size: 0.82rem; z-index: 99999; cursor: pointer; box-shadow: 0 -2px 12px rgba(0,0,0,0.6); justify-content: space-between; align-items: center; gap: 0.75rem;" title="Clique para fechar">
@@ -1534,7 +1581,6 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
 
     /* ================= INICIALIZAÇÃO E MIGRAÇÃO ================= */
     document.addEventListener('DOMContentLoaded', () => {
-      initDebugPanel();
       runOldMigration();
       loadSavedState();
       renderIndex();
@@ -1813,58 +1859,68 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       }
     }
 
-    /* ================= RENDERIZAÇÃO DO CURSO ================= */
+    /* ================= DEFINIÇÃO DAS 4 ETAPAS ================= */
+    const STAGES_CONFIG = [
+      { id: 1, name: "ETAPA 1 — VIABILIDADE: Planejar antes de vender", desc: "Módulos 1 a 6" },
+      { id: 2, name: "ETAPA 2 — PUBLICAÇÃO E PRIMEIRA VENDA", desc: "Módulos 7 a 12" },
+      { id: 3, name: "ETAPA 3 — AQUISIÇÃO CONTROLADA: Tráfego com lucro", desc: "Módulos 13 a 18" },
+      { id: 4, name: "ETAPA 4 — GESTÃO E ESCALA", desc: "Módulos 19 a 22" }
+    ];
+
+    /* ================= RENDERIZAÇÃO DO ÍNDICE E CONTEÚDO ================= */
     function renderIndex() {
       const nav = document.getElementById('index-nav-list');
       nav.innerHTML = '';
 
-      let currentStage = 0;
-      MODULES_DATA.forEach((mod) => {
-        // Se mudou de etapa, cria cabeçalho
-        if (mod.stage !== currentStage) {
-          currentStage = mod.stage;
-          const stageEl = document.createElement('div');
-          stageEl.className = 'index-stage-header';
-          stageEl.textContent = mod.stageName;
-          nav.appendChild(stageEl);
-        }
+      STAGES_CONFIG.forEach(stage => {
+        const stageGroup = document.createElement('div');
+        stageGroup.className = 'index-stage-group';
+        stageGroup.id = `idx-stage-group-${stage.id}`;
 
-        const item = document.createElement('a');
-        item.href = `#module-${mod.id}`;
-        item.className = `index-item ${APP_STATE.progress[mod.id] ? 'is-completed' : ''}`;
-        item.id = `idx-item-${mod.id}`;
-        item.innerHTML = `
-          <span style="display: flex; align-items: center; gap: 0.4rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-            <span style="color: #EE4D2D; font-weight: 700; font-size: 0.78rem;">M${mod.id}</span>
-            <span style="overflow: hidden; text-overflow: ellipsis;">${mod.title}</span>
+        const stageMods = MODULES_DATA.filter(m => m.stage === stage.id);
+
+        const headerEl = document.createElement('div');
+        headerEl.className = 'index-stage-header';
+        headerEl.setAttribute('data-stage', stage.id);
+        headerEl.innerHTML = `
+          <span style="display: flex; align-items: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            <span class="idx-stage-chev">▸</span>
+            <span style="overflow: hidden; text-overflow: ellipsis;">${stage.name}</span>
           </span>
-          <span class="idx-check" style="font-size: 0.75rem;">${APP_STATE.progress[mod.id] ? '✅' : '○'}</span>
+          <span style="font-size: 0.7rem; color: #888; margin-left: 0.4rem; white-space: nowrap;">${stageMods.length} mods</span>
         `;
-        item.addEventListener('click', (e) => {
-          e.preventDefault();
-          openAndScrollToModule(mod.id);
-        });
-        nav.appendChild(item);
 
-        // Se for o Módulo 5, insere o item da Calculadora de Precificação logo após
-        if (mod.id === 5) {
-          const calcItem = document.createElement('a');
-          calcItem.href = "#calc-pricing-box";
-          calcItem.className = 'index-item calc-item';
-          calcItem.id = 'idx-item-calc';
-          calcItem.innerHTML = `
-            <span>🧮 Calculadora de Precificação</span>
-            <span style="font-size: 0.7rem; color: #EE4D2D;">Ferramenta</span>
+        headerEl.addEventListener('click', () => {
+          toggleStage(stage.id);
+        });
+
+        const modsContainer = document.createElement('div');
+        modsContainer.className = 'index-stage-modules';
+        modsContainer.id = `idx-stage-mods-${stage.id}`;
+
+        stageMods.forEach(mod => {
+          const item = document.createElement('a');
+          item.href = `#module-${mod.id}`;
+          item.className = `index-item ${APP_STATE.progress[mod.id] ? 'is-completed' : ''}`;
+          item.id = `idx-item-${mod.id}`;
+          item.setAttribute('data-stage', stage.id);
+          item.innerHTML = `
+            <span style="display: flex; align-items: center; gap: 0.4rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              <span style="color: #EE4D2D; font-weight: 700; font-size: 0.78rem;">M${mod.id}</span>
+              <span style="overflow: hidden; text-overflow: ellipsis;">${mod.title}</span>
+            </span>
+            <span class="idx-check" style="font-size: 0.75rem;">${APP_STATE.progress[mod.id] ? '✅' : '○'}</span>
           `;
-          calcItem.addEventListener('click', (e) => {
+          item.addEventListener('click', (e) => {
             e.preventDefault();
-            const calcEl = document.getElementById('calc-pricing-box');
-            if (calcEl) {
-              calcEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+            openAndScrollToModule(mod.id);
           });
-          nav.appendChild(calcItem);
-        }
+          modsContainer.appendChild(item);
+        });
+
+        stageGroup.appendChild(headerEl);
+        stageGroup.appendChild(modsContainer);
+        nav.appendChild(stageGroup);
       });
     }
 
@@ -1872,102 +1928,147 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       const container = document.getElementById('course-content-area');
       container.innerHTML = '';
 
-      MODULES_DATA.forEach(mod => {
-        const isDone = !!APP_STATE.progress[mod.id];
-        const hasNotes = !!(APP_STATE.notes[mod.id] && APP_STATE.notes[mod.id].trim());
-        const totalChecks = mod.checklist.length;
-        let checkedCount = 0;
-        mod.checklist.forEach((_, cIdx) => {
-          if (APP_STATE.checklists[`m${mod.id}-c${cIdx}`]) checkedCount++;
-        });
+      STAGES_CONFIG.forEach(stage => {
+        const stageMods = MODULES_DATA.filter(m => m.stage === stage.id);
 
-        const card = document.createElement('div');
-        card.className = `module-card ${isDone ? 'completed-card' : ''}`;
-        card.id = `module-${mod.id}`;
+        const stageCard = document.createElement('div');
+        stageCard.className = 'stage-card';
+        stageCard.id = `stage-card-${stage.id}`;
 
-        card.innerHTML = `
-          <div class="module-header" data-mod="${mod.id}">
-            <div class="module-title-area">
-              <span class="module-chevron" style="color: #888; font-size: 0.85rem;">▸</span>
-              <span class="module-number">Módulo ${mod.id}</span>
-              <div class="module-name">${mod.title}</div>
+        stageCard.innerHTML = `
+          <div class="stage-header" data-stage="${stage.id}">
+            <div class="stage-title-area">
+              <span class="stage-chevron">▸</span>
+              <span>${stage.name}</span>
             </div>
-            <div class="module-actions">
-              <span class="badge-check" id="check-counter-${mod.id}">✓ ${checkedCount}/${totalChecks}</span>
-              <button type="button" class="btn-notes-badge ${hasNotes ? 'has-content' : ''}" data-mod="${mod.id}" title="Anotações">
-                <span>📝</span>
-                <span style="font-size: 0.7rem;">Notas</span>
-                ${hasNotes ? '<span class="dot-note"></span>' : ''}
-              </button>
-              <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer; font-size: 0.8rem; color: ${isDone ? '#86efac' : '#aaa'};" onclick="event.stopPropagation();">
-                <input type="checkbox" class="mod-complete-checkbox" data-mod="${mod.id}" ${isDone ? 'checked' : ''} style="accent-color: #22c55e; width: 16px; height: 16px;">
-                <span>Concluído</span>
-              </label>
-            </div>
+            <span style="background: rgba(238, 77, 45, 0.15); color: #EE4D2D; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 999px;">
+              ${stageMods.length} módulos
+            </span>
           </div>
-
-          <div class="module-body">
-            <!-- 🎯 Objetivo -->
-            <div class="section-block">
-              <div class="section-label"><span>🎯</span> Objetivo</div>
-              <div>${mod.objective}</div>
-            </div>
-
-            <!-- 📋 O que fazer -->
-            <div class="section-block">
-              <div class="section-label"><span>📋</span> O que fazer</div>
-              <div>${mod.whatToDo}</div>
-            </div>
-
-            <!-- 🛠️ Como fazer (passo a passo) -->
-            <div class="section-block">
-              <div class="section-label"><span>🛠️</span> Como fazer (passo a passo)</div>
-              <div style="white-space: pre-line; line-height: 1.65;">${mod.howToDo}</div>
-            </div>
-
-            <!-- 💡 Por que fazer -->
-            <div class="section-block">
-              <div class="section-label"><span>💡</span> Por que fazer</div>
-              <div>${mod.whyToDo}</div>
-            </div>
-
-            <!-- ✅ Checklist do módulo -->
-            <div class="section-block">
-              <div class="section-label"><span>✅</span> Checklist do módulo</div>
-              <ul class="checklist-list">
-                ${mod.checklist.map((itemTxt, cIdx) => {
-                  const checkKey = `m${mod.id}-c${cIdx}`;
-                  const isChecked = !!APP_STATE.checklists[checkKey];
-                  return `
-                    <li class="checklist-item ${isChecked ? 'checked' : ''}">
-                      <input type="checkbox" id="${checkKey}" data-mod="${mod.id}" data-idx="${cIdx}" ${isChecked ? 'checked' : ''}>
-                      <label for="${checkKey}">${itemTxt}</label>
-                    </li>
-                  `;
-                }).join('')}
-              </ul>
-            </div>
-
-            <!-- Anotações do Módulo -->
-            <div class="notes-box">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-                <span style="font-size: 0.8rem; font-weight: 600; color: #EE4D2D;">📝 Minhas Anotações do Módulo ${mod.id}</span>
-                <span class="note-save-status" style="font-size: 0.72rem; color: #777;">Salvo automaticamente</span>
-              </div>
-              <textarea class="mod-textarea" data-mod="${mod.id}" placeholder="Escreva aqui suas ideias, cálculos e insights para este módulo...">${APP_STATE.notes[mod.id] || ''}</textarea>
-            </div>
-          </div>
+          <div class="stage-body" id="stage-body-${stage.id}"></div>
         `;
 
-        container.appendChild(card);
+        const stageBody = stageCard.querySelector(`#stage-body-${stage.id}`);
 
-        // Se for o módulo 5, renderiza a Calculadora de Precificação logo após
-        if (mod.id === 5) {
-          renderCalculatorSection(container);
-        }
+        stageMods.forEach(mod => {
+          const isDone = !!APP_STATE.progress[mod.id];
+          const hasNotes = !!(APP_STATE.notes[mod.id] && APP_STATE.notes[mod.id].trim());
+          const totalChecks = mod.checklist.length;
+          let checkedCount = 0;
+          mod.checklist.forEach((_, cIdx) => {
+            if (APP_STATE.checklists[`m${mod.id}-c${cIdx}`]) checkedCount++;
+          });
+
+          const card = document.createElement('div');
+          card.className = `module-card ${isDone ? 'completed-card' : ''}`;
+          card.id = `module-${mod.id}`;
+
+          card.innerHTML = `
+            <div class="module-header" data-mod="${mod.id}">
+              <div class="module-title-area">
+                <span class="module-chevron" style="color: #888; font-size: 0.85rem;">▸</span>
+                <span class="module-number">Módulo ${mod.id}</span>
+                <div class="module-name">${mod.title}</div>
+              </div>
+              <div class="module-actions">
+                <span class="badge-check" id="check-counter-${mod.id}">✓ ${checkedCount}/${totalChecks}</span>
+                <button type="button" class="btn-notes-badge ${hasNotes ? 'has-content' : ''}" data-mod="${mod.id}" title="Anotações">
+                  <span>📝</span>
+                  <span style="font-size: 0.7rem;">Notas</span>
+                  ${hasNotes ? '<span class="dot-note"></span>' : ''}
+                </button>
+                <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer; font-size: 0.8rem; color: ${isDone ? '#86efac' : '#aaa'};" onclick="event.stopPropagation();">
+                  <input type="checkbox" class="mod-complete-checkbox" data-mod="${mod.id}" ${isDone ? 'checked' : ''} style="accent-color: #22c55e; width: 16px; height: 16px;">
+                  <span>Concluído</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="module-body">
+              <!-- 🎯 Objetivo -->
+              <div class="section-block">
+                <div class="section-label"><span>🎯</span> Objetivo</div>
+                <div>${mod.objective}</div>
+              </div>
+
+              <!-- 📋 O que fazer -->
+              <div class="section-block">
+                <div class="section-label"><span>📋</span> O que fazer</div>
+                <div>${mod.whatToDo}</div>
+              </div>
+
+              <!-- 🛠️ Como fazer (passo a passo) -->
+              <div class="section-block">
+                <div class="section-label"><span>🛠️</span> Como fazer (passo a passo)</div>
+                <div style="white-space: pre-line; line-height: 1.65;">${mod.howToDo}</div>
+              </div>
+
+              <!-- Inserção da Calculadora no Módulo 5 -->
+              ${mod.id === 5 ? '<div id="module-5-calc-slot"></div>' : ''}
+
+              <!-- 💡 Por que fazer -->
+              <div class="section-block">
+                <div class="section-label"><span>💡</span> Por que fazer</div>
+                <div>${mod.whyToDo}</div>
+              </div>
+
+              <!-- ✅ Checklist do módulo -->
+              <div class="section-block">
+                <div class="section-label"><span>✅</span> Checklist do módulo</div>
+                <ul class="checklist-list">
+                  ${mod.checklist.map((itemTxt, cIdx) => {
+                    const checkKey = `m${mod.id}-c${cIdx}`;
+                    const isChecked = !!APP_STATE.checklists[checkKey];
+                    return `
+                      <li class="checklist-item ${isChecked ? 'checked' : ''}">
+                        <input type="checkbox" id="${checkKey}" data-mod="${mod.id}" data-idx="${cIdx}" ${isChecked ? 'checked' : ''}>
+                        <label for="${checkKey}">${itemTxt}</label>
+                      </li>
+                    `;
+                  }).join('')}
+                </ul>
+              </div>
+
+              <!-- Anotações do Módulo -->
+              <div class="notes-box">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                  <span style="font-size: 0.8rem; font-weight: 600; color: #EE4D2D;">📝 Minhas Anotações do Módulo ${mod.id}</span>
+                  <span class="note-save-status" style="font-size: 0.72rem; color: #777;">Salvo automaticamente</span>
+                </div>
+                <textarea class="mod-textarea" data-mod="${mod.id}" placeholder="Escreva aqui suas ideias, cálculos e insights para este módulo...">${APP_STATE.notes[mod.id] || ''}</textarea>
+              </div>
+            </div>
+          `;
+
+          stageBody.appendChild(card);
+        });
+
+        container.appendChild(stageCard);
       });
 
+      // Renderiza a Calculadora de Precificação diretamente dentro do Módulo 5
+      const calcSlot = document.getElementById('module-5-calc-slot');
+      if (calcSlot) {
+        renderCalculatorSection(calcSlot);
+      }
+
       updateOverallProgress();
+    }
+
+    /* Alterna a expansão de uma Etapa (abrir uma não fecha as outras) */
+    function toggleStage(stageId, forceOpen = null) {
+      const stageCard = document.getElementById(`stage-card-${stageId}`);
+      const idxGroup = document.getElementById(`idx-stage-group-${stageId}`);
+
+      const currentlyOpen = stageCard ? stageCard.classList.contains('is-open') : false;
+      const willOpen = forceOpen !== null ? forceOpen : !currentlyOpen;
+
+      if (stageCard) {
+        stageCard.classList.toggle('is-open', willOpen);
+      }
+      if (idxGroup) {
+        idxGroup.classList.toggle('is-open', willOpen);
+      }
     }
 
     /* ================= CALCULADORA DE PRECIFICAÇÃO ================= */
@@ -2333,7 +2434,13 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       APP_STATE.lastModule = modId;
       localStorage.setItem('ehlisson-last-module', modId);
 
-      // Fecha outros accordions e abre o desejado
+      const modObj = MODULES_DATA.find(m => m.id === modId);
+      if (modObj) {
+        // Abre obrigatoriamente a etapa pai do módulo
+        toggleStage(modObj.stage, true);
+      }
+
+      // Fecha outros accordions de módulos e abre o desejado
       document.querySelectorAll('.module-card').forEach(c => {
         if (c.id === `module-${modId}`) {
           c.classList.add('is-open');
@@ -2348,7 +2455,9 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
 
       const target = document.getElementById(`module-${modId}`);
       if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 50);
       }
     }
 
@@ -2437,12 +2546,11 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       const btnLogCourse = document.getElementById('btn-logout-course');
       if (btnLogCourse) btnLogCourse.addEventListener('click', logoutAction);
 
-      // Entrar no Curso Shopee
+      // Entrar no Curso Shopee (todos os módulos iniciam fechados por padrão)
       const btnEnter = document.getElementById('btn-enter-shopee');
       if (btnEnter) {
         btnEnter.addEventListener('click', () => {
           showScreen('curso');
-          openAndScrollToModule(APP_STATE.lastModule || 1);
         });
       }
 
@@ -2452,12 +2560,6 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         btnBack.addEventListener('click', () => {
           showScreen('cursos');
         });
-      }
-
-      // Imprimir / PDF
-      const btnPrint = document.getElementById('btn-print-doc');
-      if (btnPrint) {
-        btnPrint.addEventListener('click', () => window.print());
       }
 
       // Zerar Progresso
@@ -2475,58 +2577,25 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         });
       }
 
-      // Exportar / Importar anotações
-      const btnExport = document.getElementById('btn-export-notes');
-      if (btnExport) {
-        btnExport.addEventListener('click', () => {
-          const exportData = {
-            exportDate: new Date().toISOString(),
-            user: APP_STATE.user?.email || 'anonimo',
-            progress: APP_STATE.progress,
-            checklists: APP_STATE.checklists,
-            notes: APP_STATE.notes
-          };
-          const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-          const a = document.createElement('a');
-          a.href = URL.createObjectURL(blob);
-          a.download = `anotacoes_cursos_ehlisson_${Date.now()}.json`;
-          a.click();
-        });
-      }
-
-      const inpImport = document.getElementById('input-import-notes');
-      if (inpImport) {
-        inpImport.addEventListener('change', (e) => {
-          const file = e.target.files[0];
-          if (!file) return;
-          const reader = new FileReader();
-          reader.onload = (evt) => {
-            try {
-              const parsed = JSON.parse(evt.target.result);
-              if (parsed.notes) APP_STATE.notes = { ...APP_STATE.notes, ...parsed.notes };
-              if (parsed.checklists) APP_STATE.checklists = { ...APP_STATE.checklists, ...parsed.checklists };
-              if (parsed.progress) APP_STATE.progress = { ...APP_STATE.progress, ...parsed.progress };
-              saveStateDebounced();
-              renderCourseModules();
-              alert("Anotações e progresso importados com sucesso!");
-            } catch(err) {
-              alert("Arquivo inválido. Por favor envie um .json exportado pela plataforma.");
-            }
-          };
-          reader.readAsText(file);
-        });
-      }
-
-      // Toggle Accordion dos Módulos
+      // Toggle Accordion das Etapas e dos Módulos
       const contentArea = document.getElementById('course-content-area');
       contentArea.addEventListener('click', (e) => {
-        const header = e.target.closest('.module-header');
-        if (header) {
-          const modId = parseInt(header.getAttribute('data-mod'), 10);
+        // Clique no cabeçalho de uma Etapa
+        const stageHdr = e.target.closest('.stage-header');
+        if (stageHdr) {
+          const stageId = parseInt(stageHdr.getAttribute('data-stage'), 10);
+          toggleStage(stageId);
+          return;
+        }
+
+        // Clique no cabeçalho de um Módulo
+        const modHdr = e.target.closest('.module-header');
+        if (modHdr) {
+          const modId = parseInt(modHdr.getAttribute('data-mod'), 10);
           const card = document.getElementById(`module-${modId}`);
           const wasOpen = card.classList.contains('is-open');
 
-          // Fecha os demais
+          // Fecha os demais módulos
           document.querySelectorAll('.module-card').forEach(c => {
             c.classList.remove('is-open');
             const ch = c.querySelector('.module-chevron');
@@ -2605,11 +2674,16 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         if (!query) {
           searchCount.style.display = 'none';
           document.querySelectorAll('.index-item').forEach(el => el.style.display = 'flex');
-          document.querySelectorAll('.index-stage-header').forEach(el => el.style.display = 'block');
+          document.querySelectorAll('.index-stage-group').forEach(el => {
+            el.style.display = 'block';
+          });
           return;
         }
 
         let matches = 0;
+        const matchedStages = new Set();
+        let firstMatchId = null;
+
         MODULES_DATA.forEach(mod => {
           const fullText = removeAccents(`${mod.title} ${mod.objective} ${mod.whatToDo} ${mod.howToDo} ${mod.whyToDo} ${mod.checklist.join(' ')}`).toLowerCase();
           const isMatch = fullText.includes(query);
@@ -2617,16 +2691,25 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           if (navItem) {
             navItem.style.display = isMatch ? 'flex' : 'none';
           }
-          if (isMatch) matches++;
+          if (isMatch) {
+            matches++;
+            matchedStages.add(mod.stage);
+            if (!firstMatchId) firstMatchId = mod.id;
+          }
         });
 
-        // Item calculadora
-        const calcItem = document.getElementById('idx-item-calc');
-        if (calcItem) {
-          const matchCalc = "calculadora de precificacao margem roas custos comissao".includes(query);
-          calcItem.style.display = matchCalc ? 'flex' : 'none';
-          if (matchCalc) matches++;
-        }
+        // Abre as etapas correspondentes e oculta as sem resultado
+        STAGES_CONFIG.forEach(stage => {
+          const groupEl = document.getElementById(`idx-stage-group-${stage.id}`);
+          if (groupEl) {
+            if (matchedStages.has(stage.id)) {
+              groupEl.style.display = 'block';
+              toggleStage(stage.id, true);
+            } else {
+              groupEl.style.display = 'none';
+            }
+          }
+        });
 
         searchCount.textContent = `${matches} resultado(s) encontrado(s)`;
         searchCount.style.display = 'block';
@@ -2735,36 +2818,9 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
 
     /* ================= TRATAMENTO DE LOGIN & ERROS DE AUTENTICAÇÃO ================= */
     let loginTimeoutId = null;
-    const debugLogs = [];
 
-    function addDebugLog(msg) {
-      const now = new Date();
-      const time = now.toTimeString().split(' ')[0]; // HH:MM:SS
-      debugLogs.push({ time, msg });
-      if (debugLogs.length > 10) {
-        debugLogs.shift();
-      }
-      renderDebugLogs();
-    }
-
-    function renderDebugLogs() {
-      const list = document.getElementById('debug-log-list');
-      if (!list) return;
-      list.innerHTML = debugLogs.map(l => `<li><span style="color: #666;">[${l.time}]</span> <span style="color: #e5e5e5;">${escapeHtml(l.msg)}</span></li>`).join('');
-    }
-
-    function initDebugPanel() {
-      const toggleBtn = document.getElementById('debug-toggle-btn');
-      const content = document.getElementById('debug-log-content');
-      const icon = document.getElementById('debug-toggle-icon');
-      if (toggleBtn && content) {
-        toggleBtn.addEventListener('click', () => {
-          const isHidden = content.style.display === 'none';
-          content.style.display = isHidden ? 'block' : 'none';
-          if (icon) icon.textContent = isHidden ? '▼' : '▲';
-        });
-      }
-    }
+    // No-op para chamadas de log (painel de debug removido)
+    function addDebugLog() {}
 
     function resetLoginBtn() {
       const spinner = document.getElementById('login-spinner');
