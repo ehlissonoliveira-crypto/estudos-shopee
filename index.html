@@ -1537,7 +1537,6 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       initDebugPanel();
       runOldMigration();
       loadSavedState();
-      initSingleAuthListener();
       renderIndex();
       renderCourseModules();
       bindEvents();
@@ -1549,6 +1548,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           globalBar.style.display = 'none';
         });
       }
+
+      iniciarFirebase();
     });
 
     // Migração de chaves legadas: "shopee-estudo-notas-bloco-1..19"
@@ -2778,6 +2779,116 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           Entrar com Google
         `;
       }
+    }
+
+    /* ================= LOADER E DIAGNÓSTICO DO FIREBASE SDK ================= */
+    const FAILED_SCRIPTS = [];
+    let sdkLoadingStarted = false;
+
+    function carregarScriptsFirebase() {
+      if (sdkLoadingStarted) return;
+      sdkLoadingStarted = true;
+
+      const scripts = [
+        { name: 'firebase-app-compat.js', url: 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js' },
+        { name: 'firebase-auth-compat.js', url: 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js' },
+        { name: 'firebase-firestore-compat.js', url: 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js' }
+      ];
+
+      let idx = 0;
+      function proximo() {
+        if (idx >= scripts.length) return;
+        const item = scripts[idx];
+        const s = document.createElement('script');
+        s.src = item.url;
+        s.onload = () => {
+          idx++;
+          proximo();
+        };
+        s.onerror = () => {
+          FAILED_SCRIPTS.push(item.name);
+          addDebugLog(`❌ Falha ao carregar: ${item.name}`);
+          idx++;
+          proximo();
+        };
+        document.head.appendChild(s);
+      }
+      proximo();
+    }
+
+    function aguardarSDK() {
+      return new Promise((resolve, reject) => {
+        if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+          const msgOffline = "📡 Você está sem internet. Conecte-se e recarregue a página.";
+          showLoginError(msgOffline);
+          addDebugLog("📡 Conexão offline detectada");
+          return reject(new Error("offline"));
+        }
+
+        if (typeof firebase !== 'undefined' && firebase.auth && firebase.firestore) {
+          addDebugLog("✅ SDK Firebase carregado");
+          return resolve();
+        }
+
+        carregarScriptsFirebase();
+
+        const startTime = Date.now();
+        const maxTime = 12000;
+        const intervalMs = 250;
+
+        const timer = setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const secs = (elapsed / 1000).toFixed(1);
+
+          if (typeof firebase !== 'undefined' && firebase.auth && firebase.firestore) {
+            clearInterval(timer);
+            addDebugLog("✅ SDK Firebase carregado");
+            resolve();
+            return;
+          }
+
+          addDebugLog(`Aguardando SDK Firebase... (${secs}s)`);
+
+          if (elapsed >= maxTime) {
+            clearInterval(timer);
+            const errMsg = "🚫 A biblioteca do Firebase não carregou. Possíveis causas: (1) sem internet, (2) bloqueador de anúncios/extensão bloqueando gstatic.com, (3) rede corporativa bloqueada. Desative bloqueadores e recarregue.";
+            showLoginError(errMsg);
+            if (FAILED_SCRIPTS.length > 0) {
+              addDebugLog(`❌ Falha ao carregar: ${FAILED_SCRIPTS.join(', ')}`);
+            } else {
+              addDebugLog("❌ Falha ao carregar: SDK não carregou no tempo limite");
+            }
+            reject(new Error("timeout"));
+          }
+        }, intervalMs);
+      });
+    }
+
+    function iniciarFirebase() {
+      aguardarSDK()
+        .then(() => {
+          try {
+            if (!firebase.apps || !firebase.apps.length) {
+              firebase.initializeApp(firebaseConfig);
+            }
+          } catch (errInit) {
+            const msgInit = errInit && errInit.message ? errInit.message : String(errInit);
+            addDebugLog(`ERRO initializeApp: ${msgInit}`);
+            showLoginError(`🚫 Erro ao inicializar Firebase: ${msgInit}`);
+            return;
+          }
+
+          try {
+            initSingleAuthListener();
+          } catch (errAuth) {
+            const msgAuth = errAuth && errAuth.message ? errAuth.message : String(errAuth);
+            addDebugLog(`ERRO auth: ${msgAuth}`);
+            showLoginError(`🚫 Erro no Firebase Auth: ${msgAuth}`);
+          }
+        })
+        .catch(() => {
+          // Erro diagnosticado e renderizado em aguardarSDK
+        });
     }
 
     // Único listener onAuthStateChanged centralizado (sem fallbacks ou usuários fakes)
