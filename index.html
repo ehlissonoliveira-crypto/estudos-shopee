@@ -695,6 +695,9 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         Entrar com Google
       </button>
 
+      <!-- Caixa de erro de login (vermelho escuro, texto claro, borda vermelha) -->
+      <div id="login-error-box" style="display: none; margin-top: 1rem; background-color: #2a0c0e; border: 1px solid #ef4444; border-radius: 8px; padding: 0.85rem 1rem; color: #fecaca; font-size: 0.85rem; line-height: 1.45; text-align: left; word-break: break-word;"></div>
+
       <div style="margin-top: 1.5rem; font-size: 0.75rem; color: #777;">
         Acesso restrito para alunos matriculados
       </div>
@@ -935,6 +938,15 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       </div>
     </div>
   </footer>
+
+  <!-- Barra fixa no rodapé para captura global de erros JavaScript -->
+  <div id="global-error-bar" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #7f1d1d; color: #fee2e2; border-top: 1px solid #ef4444; padding: 0.65rem 1.25rem; font-size: 0.82rem; z-index: 99999; cursor: pointer; box-shadow: 0 -2px 12px rgba(0,0,0,0.6); justify-content: space-between; align-items: center; gap: 0.75rem;" title="Clique para fechar">
+    <div style="display: flex; align-items: center; gap: 0.5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+      <span>⚠️</span>
+      <span id="global-error-msg" style="overflow: hidden; text-overflow: ellipsis;"></span>
+    </div>
+    <span style="font-size: 0.75rem; opacity: 0.85; flex-shrink: 0; text-decoration: underline;">✕ fechar</span>
+  </div>
 
   
   <script>
@@ -1477,14 +1489,45 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       }
     ];
 
+    /* ================= CAPTURA GLOBAL DE ERROS JAVASCRIPT ================= */
+    window.addEventListener('error', (event) => {
+      const msg = event.message || (event.error && event.error.message) || 'Erro inesperado no script';
+      showGlobalError(`Erro: ${msg}`);
+    });
+
+    window.addEventListener('unhandledrejection', (event) => {
+      const reason = event.reason;
+      const msg = (reason && (reason.message || reason.code))
+        ? (reason.code ? `${reason.code}: ${reason.message}` : reason.message)
+        : String(reason);
+      showGlobalError(`Erro não tratado: ${msg}`);
+    });
+
+    function showGlobalError(msg) {
+      const bar = document.getElementById('global-error-bar');
+      const textEl = document.getElementById('global-error-msg');
+      if (bar && textEl) {
+        textEl.textContent = msg;
+        bar.style.display = 'flex';
+      }
+    }
+
     /* ================= INICIALIZAÇÃO E MIGRAÇÃO ================= */
     document.addEventListener('DOMContentLoaded', () => {
       runOldMigration();
       loadSavedState();
+      checkRedirectResult();
       renderIndex();
       renderCourseModules();
       bindEvents();
       updateSyncBanner();
+
+      const globalBar = document.getElementById('global-error-bar');
+      if (globalBar) {
+        globalBar.addEventListener('click', () => {
+          globalBar.style.display = 'none';
+        });
+      }
     });
 
     // Migração de chaves legadas: "shopee-estudo-notas-bloco-1..19"
@@ -2156,23 +2199,39 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       const btnLogin = document.getElementById('btn-google-login');
       if (btnLogin) {
         btnLogin.addEventListener('click', () => {
+          hideLoginError();
           document.getElementById('login-spinner').style.display = 'block';
           btnLogin.disabled = true;
 
-          // Simulação elegante do popup Google Auth
-          setTimeout(() => {
-            APP_STATE.user = {
-              uid: 'user_' + Date.now(),
-              name: 'Ehlisson Aluno',
-              email: 'aluno@ehlisson.com.br',
-              photo: 'https://img.usecurling.com/ppl/thumbnail?gender=male'
-            };
-            localStorage.setItem('ehlisson-user', JSON.stringify(APP_STATE.user));
-            updateUserUI();
-            document.getElementById('login-spinner').style.display = 'none';
-            btnLogin.disabled = false;
-            showScreen('screen-hub');
-          }, 700);
+          if (typeof firebase !== 'undefined' && firebase.auth) {
+            try {
+              if (!firebase.apps || !firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+              }
+              const provider = new firebase.auth.GoogleAuthProvider();
+              firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                  if (result && result.user) {
+                    handleAuthSuccess(result.user);
+                  }
+                })
+                .catch((error) => {
+                  handleAuthError(error, provider);
+                });
+            } catch (err) {
+              handleAuthError(err);
+            }
+          } else {
+            // Em ambiente estático sem SDK Firebase injetado
+            setTimeout(() => {
+              handleAuthSuccess({
+                uid: 'user_' + Date.now(),
+                displayName: 'Ehlisson Aluno',
+                email: 'aluno@ehlisson.com.br',
+                photoURL: 'https://img.usecurling.com/ppl/thumbnail?gender=male'
+              });
+            }, 600);
+          }
         });
       }
 
@@ -2479,6 +2538,105 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
             openAndScrollToModule(targetMod);
           });
         });
+      }
+    }
+
+    /* ================= TRATAMENTO DE LOGIN & ERROS DE AUTENTICAÇÃO ================= */
+    function checkRedirectResult() {
+      if (typeof firebase !== 'undefined' && firebase.auth) {
+        try {
+          if (!firebase.apps || !firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+          }
+          firebase.auth().getRedirectResult()
+            .then((result) => {
+              sessionStorage.removeItem('redirect_fallback_attempted');
+              if (result && result.user) {
+                handleAuthSuccess(result.user);
+              }
+            })
+            .catch((error) => {
+              sessionStorage.removeItem('redirect_fallback_attempted');
+              handleAuthError(error);
+            });
+        } catch (err) {
+          sessionStorage.removeItem('redirect_fallback_attempted');
+          handleAuthError(err);
+        }
+      }
+    }
+
+    function handleAuthSuccess(user) {
+      APP_STATE.user = {
+        uid: user.uid,
+        name: user.displayName || user.name || 'Aluno',
+        email: user.email || '',
+        photo: user.photoURL || user.photo || 'https://img.usecurling.com/ppl/thumbnail?gender=male'
+      };
+      localStorage.setItem('ehlisson-user', JSON.stringify(APP_STATE.user));
+      updateUserUI();
+      const spinner = document.getElementById('login-spinner');
+      if (spinner) spinner.style.display = 'none';
+      const btn = document.getElementById('btn-google-login');
+      if (btn) btn.disabled = false;
+      hideLoginError();
+      showScreen('screen-hub');
+    }
+
+    function handleAuthError(error, provider) {
+      const spinner = document.getElementById('login-spinner');
+      if (spinner) spinner.style.display = 'none';
+      const btn = document.getElementById('btn-google-login');
+      if (btn) btn.disabled = false;
+
+      const code = (error && error.code) || '';
+      let friendlyMsg = '';
+
+      if (code === 'auth/unauthorized-domain') {
+        friendlyMsg = '🚫 Domínio não autorizado: este endereço não está na lista de domínios autorizados do Firebase. Vá em console.firebase.google.com → Authentication → Settings → Authorized domains e adicione o domínio deste site.';
+      } else if (code === 'auth/operation-not-allowed') {
+        friendlyMsg = '🚫 O login com Google não está ativado no Firebase. Ative em Authentication → Sign-in method → Google.';
+      } else if (code === 'auth/popup-blocked' || code === 'auth/popup-closed-by-user') {
+        friendlyMsg = '⚠️ O navegador bloqueou a janela de login. Permita pop-ups para este site.';
+        // Fallback automático com signInWithRedirect (uma única tentativa para evitar loop)
+        const alreadyAttempted = sessionStorage.getItem('redirect_fallback_attempted');
+        if (!alreadyAttempted && typeof firebase !== 'undefined' && firebase.auth && provider) {
+          sessionStorage.setItem('redirect_fallback_attempted', 'true');
+          try {
+            firebase.auth().signInWithRedirect(provider).catch((redirErr) => {
+              handleAuthError(redirErr);
+            });
+            return;
+          } catch (redirErr) {
+            console.warn('Falha no signInWithRedirect fallback:', redirErr);
+          }
+        }
+      } else if (code === 'auth/network-request-failed') {
+        friendlyMsg = '📡 Erro de conexão. Verifique sua internet e tente de novo.';
+      } else if (code) {
+        friendlyMsg = `Erro: ${code}`;
+      } else if (error && error.message) {
+        friendlyMsg = `Erro: ${error.message}`;
+      } else {
+        friendlyMsg = `Erro: ${String(error)}`;
+      }
+
+      showLoginError(friendlyMsg);
+    }
+
+    function showLoginError(msg) {
+      const errBox = document.getElementById('login-error-box');
+      if (errBox) {
+        errBox.textContent = msg;
+        errBox.style.display = 'block';
+      }
+    }
+
+    function hideLoginError() {
+      const errBox = document.getElementById('login-error-box');
+      if (errBox) {
+        errBox.textContent = '';
+        errBox.style.display = 'none';
       }
     }
 
